@@ -54,7 +54,7 @@ class Reservation extends CI_Controller {
 		$statut = $_POST['statut'];
 		$mail = $_POST['mail'];
 		$mdp = md5($_POST['pass']); // Mot de passe formulaire
-		echo $mdp;
+		//echo $mdp;
 
 		$this->load->database();
 
