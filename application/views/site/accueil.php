@@ -7,11 +7,11 @@
         <div class="container">
 
             <header class="section-header"> <br> <br>
-                <h3>Welcome <?= $_SESSION['prenom']." ".$_SESSION['nom'] ?></h3>
+                <h3>Welcome <?= $_SESSION['prenom'] . " " . $_SESSION['nom'] ?></h3>
                 <br>
             </header>
 
-            <p class="wow"> <?= var_dump($_SESSION) ?></p>
+            <p class="wow"> <?php //var_dump($_SESSION)    ?></p>
 
 
             <div class="row about-cols">
@@ -158,91 +158,86 @@
 
         </div>
     </section><!-- #team -->
-	
-	<!--==========================
-	 Listes des salles
-	============================-->
-	<!-- Modal -->
-	<div id="myModal" class="modal fade" role="dialog">
-		<div class="modal-dialog modal-lg">
 
-			<!-- Modal content-->
-			<div class="modal-content">
+    <!--==========================
+     Listes des salles
+    ============================-->
+    <!-- Modal -->
+    <div id="myModal" class="modal fade" role="dialog">
+        <div class="modal-dialog modal-lg">
 
-				<div class="modal-body">
-					<div class="container">
+            <!-- Modal content-->
+            <div class="modal-content">
 
-						<header class="section-header wow fadeInUp">
-							<h3>Listes des salles</h3>
+                <div class="modal-body">
+                    <div class="container">
 
-							<table class="table table-hover">
-								<thead>
-									<tr>
-										<th scope="col">Numéro de salle
-											<input class="form-control" type="text" name="searchnum" value="" placeholder="Rechercher" required=""/><br>
-										</th>
-										<th scope="col">Date
-											<input class="form-control" type="date" name="date" value="" placeholder="Rechercher a une date" required=""/><br>
+                        <header class="section-header wow fadeInUp"  id="mes_rdv">
+                            <h3>Listes des salles</h3>
 
-										</th>
-										<th scope="col">Heure de début
-											<input class="form-control" type="time" name="time  " value="" placeholder="Rechercher a une date" required=""/><br>
-										</th>
-										<th scope="col" class="">Option </th>
-									</tr>
-								</thead>
-								<tbody>
-									<tr>
-										<th scope="row">A1</th>
-										<td>12/05/2019</td>
-										<td>12:00</td>
-										<td>
-											<button class='btn btn-success'> <i class='fa fa-play'></i> Réserver</button>
-										</td>
-									</tr>
-									<tr>
-										<th scope="row">A2</th>
-										<td>12/05/2019</td>
-										<td>09:20</td>
-										<td class="text-danger">Se libère à <b>08:45</b></td>
-									</tr>
-									<tr>
-										<th scope="row">A3</th>
-										<td>12/05/2019</td>
-										<td>08:45</td>
-										<td class="text-danger">Se libère à <b>08:45</b></td>
-									</tr>
-								</tbody>
-							</table>
-						</header>
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">Numéro de salle
+                                            <input class="form-control" type="text" name="searchnum" value="" placeholder="Rechercher" required=""/><br>
+                                        </th>
+                                        <th scope="col">Date
+                                            <input class="form-control" type="date" name="date" value="" placeholder="Rechercher a une date" required=""/><br>
 
-					</div>
-				</div>
-				<div class="modal-footer">
-					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-				</div>
-			</div>
+                                        </th>
+                                        <th scope="col">Heure de début
+                                            <input class="form-control" type="time" name="time  " value="" placeholder="Rechercher a une date" required=""/><br>
+                                        </th>
+                                        <th scope="col" class="">Option </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <th scope="row">A1</th>
+                                        <td>12/05/2019</td>
+                                        <td>12:00</td>
+                                        <td>
+                                            <button class='btn btn-success' id="demande_rdv">
+                                                <i class='fa fa-play'></i> Réserver
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row">A2</th>
+                                        <td>12/05/2019</td>
+                                        <td>09:20</td>
+                                        <td class="text-danger">Se libère à <b>08:45</b></td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row">A3</th>
+                                        <td>12/05/2019</td>
+                                        <td>08:45</td>
+                                        <td class="text-danger">Se libère à <b>08:45</b></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </header>
 
-		</div>
-	</div>
-	<div id="ok" class="modal fade" role="dialog">
-		<div class="modal-dialog modal-lg">
+                        <div id="form_rdv">
+                            <form class="form" action="<?php echo base_url("Etudiant/demande_rdv_prof"); ?>" method="post">                           
+                                <input class="form-control" type="text" name="salle" value="" placeholder="Salle" required=""/><br>  
+                                <input class="form-control" type="text" name="nom_prof" value="" placeholder="Nom du professeur avec lequel vous voulez prendre rendez vous" required=""/><br>
+                                <input class="form-control" type="time" name="heure_debut" value="" placeholder="Heure" required=""/><br>
+                                <input class="form-control" type="time" name="heure_fin" value="" placeholder="Heure" required=""/><br>
+                                <input class="btn btn-block btn-success active " type="submit" value="Faire la demande" /><br>
+                            </form>
+                        </div>
 
-			<!-- Modal content-->
-			<div class="modal-content">
-				<div class="modal-header">
-					<h4 class="modal-title">Scanner un code</h4>
-				</div>
-				<div class="modal-body img-fluid">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default btn-block" id="btn_retour_demande_rdv">Retour</button>
+                    <button type="button" class="btn btn-default btn-block" data-dismiss="modal">Close</button>
+                </div>
+            </div>
 
-				</div>
-				<div class="modal-footer">
-					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-				</div>
-			</div>
-
-		</div>
-	</div>
+        </div>
+    </div>
 
 
 </main>

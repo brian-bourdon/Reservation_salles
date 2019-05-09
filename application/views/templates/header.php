@@ -15,14 +15,14 @@
         <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,700,700i|Montserrat:300,400,500,700" rel="stylesheet">
 
         <!-- Bootstrap CSS File -->
-        <link href="<?php echo base_url('assets/lib/bootstrap/css/bootstrap.min.css');?>" rel="stylesheet">
-		
+        <link href="<?php echo base_url('assets/lib/bootstrap/css/bootstrap.min.css'); ?>" rel="stylesheet">
+
         <!-- Libraries CSS Files -->
-        <link href="<?php echo base_url('assets/lib/font-awesome/css/font-awesome.min.css');?>" rel="stylesheet">
-		<link href="<?php echo base_url('assets/lib/animate/animate.min.css');?>" rel="stylesheet">
-		<link href="<?php echo base_url('assets/lib/ionicons/css/ionicons.min.css');?>" rel="stylesheet">
-		<link href="<?php echo base_url('assets/lib/owlcarousel/assets/owl.carousel.min.css');?>" rel="stylesheet">
-		<link href="<?php echo base_url('assets/lib/lightbox/css/lightbox.min.css');?>" rel="stylesheet">
+        <link href="<?php echo base_url('assets/lib/font-awesome/css/font-awesome.min.css'); ?>" rel="stylesheet">
+        <link href="<?php echo base_url('assets/lib/animate/animate.min.css'); ?>" rel="stylesheet">
+        <link href="<?php echo base_url('assets/lib/ionicons/css/ionicons.min.css'); ?>" rel="stylesheet">
+        <link href="<?php echo base_url('assets/lib/owlcarousel/assets/owl.carousel.min.css'); ?>" rel="stylesheet">
+        <link href="<?php echo base_url('assets/lib/lightbox/css/lightbox.min.css'); ?>" rel="stylesheet">
 
         <!-- Main Stylesheet File -->
         <link href="<?php echo base_url('assets/css/style.css'); ?>" rel="stylesheet">
@@ -84,96 +84,96 @@
 
             </div>
         </header><!-- #header -->
-	<!--==========================
-	 Modal de notification
-	============================-->
-	<!-- Modal -->
-	<div id="myMod" class="modal fade" role="dialog">
-		<div class="modal-dialog modal-lg">
+        <!--==========================
+         Modal de notification
+        ============================-->
+        <!-- Modal -->
+        <div id="myMod" class="modal fade" role="dialog">
+            <div class="modal-dialog modal-lg">
 
-			<!-- Modal content-->
-			<div class="modal-content">
-				<div class="modal-header">
-					<h4 class="modal-title">Notifications</h4>
-				</div>
-				<div class="modal-body">
-					<table class="table table-hover">
-						<thead>
-							<tr>
-								<th scope="col">Numéro de salle</th>
-								<th scope="col">Membres du groupe</th>
-								<th scope="col">Date</th>
-								<th scope="col">Heure de début</th>
-								<th scope="col" class="">Rejoindre le groupe </th>
-							</tr>
-						</thead>
-						<tbody>
-							<tr>
-								<th scope="row">A1</th>
-								<td>@Kyriel, @Brain @Kev</td>
-								<td>12/05/2019</td>
-								<td>12:00</td>
-								<td>
-									<button class='btn btn-success'> <i class='fa fa-play'></i> oui </button>
-									<button class='btn btn-danger'> <i class='fa fa-stop'></i> non </button>
-								</td>
-							</tr>
-							<tr>
-								<th scope="row">A2</th>
-								<td>@Kyriel, @Brain @Kev</td>
-								<td>12/05/2019</td>
-								<td>09:20</td>
-								<td>
-									<button class='btn btn-success'> <i class='fa fa-play'></i> oui </button>
-									<button class='btn btn-danger'> <i class='fa fa-stop'></i> non </button>
-								</td>
-							</tr>
+                <!-- Modal content-->
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Notifications</h4>
+                    </div>
+                    <div class="modal-body">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Numéro de salle</th>
+                                    <th scope="col">Membres du groupe</th>
+                                    <th scope="col">Date</th>
+                                    <th scope="col">Heure de début</th>
+                                    <th scope="col" class="">Rejoindre le groupe </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <th scope="row">A1</th>
+                                    <td>@Kyriel, @Brain @Kev</td>
+                                    <td>12/05/2019</td>
+                                    <td>12:00</td>
+                                    <td>
+                                        <button class='btn btn-success'> <i class='fa fa-play'></i> oui </button>
+                                        <button class='btn btn-danger'> <i class='fa fa-stop'></i> non </button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">A2</th>
+                                    <td>@Kyriel, @Brain @Kev</td>
+                                    <td>12/05/2019</td>
+                                    <td>09:20</td>
+                                    <td>
+                                        <button class='btn btn-success'> <i class='fa fa-play'></i> oui </button>
+                                        <button class='btn btn-danger'> <i class='fa fa-stop'></i> non </button>
+                                    </td>
+                                </tr>
 
-						</tbody>
-					</table>    
-				</div>
-				<div class="modal-footer">
-					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-				</div>
-			</div>
+                            </tbody>
+                        </table>    
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default btn-block" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
 
-		</div>
-	</div>
+            </div>
+        </div>
 
-	<!--==========================
-	 Modal de notification
-	============================-->
-	<div id="rdv" class="modal fade" role="dialog">
-		<div class="modal-dialog modal-lg">
+        <!--==========================
+         Modal de notification
+        ============================-->
+        <div id="rdv" class="modal fade" role="dialog">
+            <div class="modal-dialog modal-lg">
 
-			<!-- Modal content-->
-			<div class="modal-content">
-				<div class="modal-header">
-					<h4 class="modal-title">Mes rendez-vous</h4>
-				</div>
-				<div class="modal-body">
-					<div id="mes_rdv">
-						<table class="table table-hover">
-							<thead>
-								<tr>
-									<th scope="col">Numéro de salle</th>
-									<th scope="col">Membres du groupe</th>
-									<th scope="col">Date</th>
-									<th scope="col">Heure de début</th>
-									<th scope="col" class="">Rejoindre le groupe </th>
-								</tr>
-							</thead>
-							<tbody>
+                <!-- Modal content-->
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Mes rendez-vous</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div>
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">Numéro de salle</th>
+                                        <th scope="col">Membres du groupe</th>
+                                        <th scope="col">Date</th>
+                                        <th scope="col">Heure de début</th>
+                                        <th scope="col" class="">Rejoindre le groupe </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
 
-								<tr>
-									<th scope="row">A2</th>
-									<td>@Kyriel, @Brian @Kev</td>
-									<td>12/05/2019</td>
-									<td>09:20</td>
-									<td>
-										<button class='btn btn-danger'> <i class='fa fa-stop'></i> Annuler </button>
-									</td>
-								</tr>
+                                    <tr>
+                                        <th scope="row">A2</th>
+                                        <td>@Kyriel, @Brian @Kev</td>
+                                        <td>12/05/2019</td>
+                                        <td>09:20</td>
+                                        <td>
+                                            <button class='btn btn-danger'> <i class='fa fa-stop'></i> Annuler </button>
+                                        </td>
+                                    </tr>
 
 							</tbody>
 						</table>
@@ -192,11 +192,12 @@
 					</div>
 				</div>
 
-				<div class="modal-footer">
-					<button type="button" class="btn btn-default btn-block" id="btn_retour_demande_rdv">Retour</button>
-					<button type="button" class="btn btn-default btn-block" data-dismiss="modal" id="btn_close_demande_rdv">Close</button>
-				</div>
-			</div>
+                    </div>
 
-		</div>
-	</div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default btn-block" data-dismiss="modal" id="btn_close_demande_rdv">Close</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
