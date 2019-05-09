@@ -110,6 +110,21 @@ class Site extends CI_Controller {
 	}
 	
 	
+	public function selectUser()
+	{
+		$search = $_GET['search'];
+		$this->load->database();
+
+		$query = $this->User_model->get_users($search);
+                
+		if($query->num_rows() == 1)
+		{
+			$this->load->library('User', $query->result_array()[0]);
+			var_dump($this->user);
+			
+		}
+		$this->db->close();
+	}
 	
 	
 	

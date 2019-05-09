@@ -221,7 +221,8 @@
                         <div id="form_rdv">
                             <form class="form" action="<?php echo base_url("Etudiant/demande_rdv_prof"); ?>" method="post">                           
                                 <input class="form-control" type="text" name="salle" value="" placeholder="Salle" required=""/><br>  
-                                <input class="form-control" type="text" name="nom_prof" value="" placeholder="Nom du professeur avec lequel vous voulez prendre rendez vous" required=""/><br>
+                                <input class="form-control searchUser" type="text" name="nom_prof" value="" placeholder="Nom du professeur avec lequel vous voulez prendre rendez vous" required=""/><br>
+                                <div id="result"></div>
                                 <input class="form-control" type="time" name="heure_debut" value="" placeholder="Heure" required=""/><br>
                                 <input class="form-control" type="time" name="heure_fin" value="" placeholder="Heure" required=""/><br>
                                 <input class="btn btn-block btn-success active " type="submit" value="Faire la demande" /><br>
