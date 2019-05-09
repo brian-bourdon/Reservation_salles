@@ -62,7 +62,7 @@
                 <nav id="nav-menu-container">
                     <?php if (isset($_SESSION['logged_in']) && $_SESSION['logged_in']) { ?>
                         <ul class="nav-menu">
-                            <li class="menu-active"><a href="<?php echo base_url('Reservation/accueil'); ?>" >Accueil</a></li>
+                            <li class="menu-active"><a href="<?php echo base_url('Site/accueil'); ?>" >Accueil</a></li>
                             <li class="menu-has-children"  data-toggle="modal" data-target="#myMod">
                                 <a href="#">Notifications 
                                     <span class='badge-success circle' style="padding:3px;"> 10 </span>
@@ -72,7 +72,7 @@
                                 <ul>
                                     <li  data-toggle="modal" data-target="#rdv"><a href="#">Mes rendez-vous</a></li>
                                     <li class="">
-                                        <form method="POST" action="<?php echo base_url('Reservation/deconnection'); ?> ">
+                                        <form method="POST" action="<?php echo base_url('Site/deconnection'); ?> ">
                                             <button class="btn btn-block" type="submit"  ><i class='fa fa-1x fa-power-off'></i> Déconnexion</button>
                                         </form>  
                                     </li>
@@ -176,9 +176,12 @@
 							</tr>
 
 						</tbody>
-					</table>    
-
+					</table>
+					<div class="text-center">
+						<button type="button" href="<?php echo base_url('Site/'); ?>" class="btn btn-primary btn-lg" data-dismiss="modal">Faire une demande de rendez-vous</button>
+					</div>
 				</div>
+				
 				<div class="modal-footer">
 					<button type="button" class="btn btn-default btn-block" data-dismiss="modal">Close</button>
 				</div>

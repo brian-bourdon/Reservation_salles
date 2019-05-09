@@ -59,12 +59,13 @@ Modal des formulaires
 				</div>
 				<div class="modal-body">
 
-					<?php if (isset($_SESSION['error'])) { ?>
-						<p class="btn btn-block btn-danger"><?= $_SESSION['error'] ?></p>
-					<?php $_SESSION = array(); session_destroy(); } ?>
+					<?php if (null != $this->session->flashdata('error')) { ?>
+						<button type="button" class="btn btn-danger btn-block"><?php echo $this->session->flashdata('error'); ?></button>
+						</br>
+					<?php } ?>
 
 					<div class="cacher" id="Incriptionform">
-						<form class="form" action="<?php echo base_url("Reservation/inscription_etudiant");?>" method="post">    
+						<form class="form" action="<?php echo base_url("Etudiant/inscription_etudiant");?>" method="post">    
 							<input type="hidden" name="statut" value="etudiant"/>
 							<input class="form-control" type="text" name="nom" value="" placeholder="Nom" required=""/><br>
 							<input class="form-control" type="text" name="prenom" value="" placeholder="Prénom" required=""/><br>
@@ -75,7 +76,7 @@ Modal des formulaires
 					</div>
 
 					<div class="cacher" id="connectEtudform">
-						<form class="form" action="<?php echo base_url("Reservation/connect");?>" method="post">    
+						<form class="form" action="<?php echo base_url("Site/connect");?>" method="post">    
 							<input type="hidden" name="statut" value="etudiant"/>
 							<input class="form-control" type="email" name="mail" value="" placeholder="Mail de l'etudiant" required=""/><br>
 							<input class="form-control" type="password" name="pass" value="" placeholder="Mot de passe" required=""/><br>
@@ -84,7 +85,7 @@ Modal des formulaires
 					</div>
 
 					<div class="cacher" id="connectProfform">
-						<form class="form" action="<?php echo base_url("Reservation/connect");?>" method="post">  
+						<form class="form" action="<?php echo base_url("Site/connect");?>" method="post">  
 							<input type="hidden" name="statut" value="professeur"/>
 							<input class="form-control" type="email" name="mail" value="" placeholder="Mail du professeur" required=""/><br>
 							<input class="form-control" type="password" name="pass" value="" placeholder="Mot de passe" required=""/><br>

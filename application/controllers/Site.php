@@ -1,9 +1,9 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Reservation extends CI_Controller {
-
-	/**
+class Site extends CI_Controller {
+	
+		/**
 	 * Index Page for this controller.
 	 *
 	 * Maps to the following URL
@@ -30,7 +30,8 @@ class Reservation extends CI_Controller {
 	public function index()
 	{
 		$data['contents'] = 'index';
-		$this->load->view('templates/template', $data);
+		$data['controller'] = "site";
+		$this->load->view('templates/template_etudiant', $data);
 	}
 	
 	public function accueil()
@@ -44,8 +45,8 @@ class Reservation extends CI_Controller {
 		{
 			$data['contents'] = 'index';
 		}
-		
-		$this->load->view('templates/template', $data);
+		$data['controller'] = "site";
+		$this->load->view('templates/template_etudiant', $data);
 		
 	}
 	
@@ -59,9 +60,9 @@ class Reservation extends CI_Controller {
 		$this->load->database();
 
 		$query = $this->User_model->get_user_by_mail($mail);
-		
 		if($query->num_rows() == 1)
 		{
+			
 			$this->load->library('User', $query->result_array()[0]);
 
 			var_dump($this->user);
@@ -79,13 +80,13 @@ class Reservation extends CI_Controller {
 				
 				$this->session->set_userdata($user_data);
 
-				redirect('Reservation/accueil');
+				redirect('Site/accueil');
 			}       
 			else
 			{
 				// Mot de passe faux ou mauvais statut (ex: eleve qui se connecte avec ses identifiants en tant que professeur)
 				//TODO: Notif
-				$this->session->set_userdata('logged_in', FALSE);
+				$this->session->set_flashdata('error','Mot de passe invalide');
 				redirect('');
 			}
 		}
@@ -93,37 +94,14 @@ class Reservation extends CI_Controller {
 		{
 			// Mail non présent dans la BDD
 			//TODO: Notif
-			$this->session->set_userdata('logged_in', FALSE);
+			$this->session->set_flashdata('error','Mail invalide');
 			redirect('');
 		}
 		$this->db->close();
 	}
 	
-	public function inscription_etudiant()
-	{
-		$nom = $_POST['nom'];
-		$prenom = $_POST['prenom'];
-		$email = $_POST['email'];
-		$pwd = md5($_POST['pass']);
 		
-
-		$data = array(
-					'prenom'  => $prenom,
-					'nom'     => $nom,
-					'email'	  => $email,
-					'pwd'  => $pwd,
-					'statut'  => 'etudiant'
-		);
-		$this->load->library('User', $data);
-
-		//var_dump($this->user);
-		//TODO: Mettre regle de verif champs
-		
-		$this->load->model('User_model');
-		$test = $this->User_model->insert_user($this->user);
-		$this->index();
-		
-	}
+	
 	
 	public function deconnection()
 	{
@@ -131,4 +109,11 @@ class Reservation extends CI_Controller {
 		redirect(base_url()); // Redirige vers la page index
 	}
 	
+	
+	
+	
+	
 }
+
+
+?>
