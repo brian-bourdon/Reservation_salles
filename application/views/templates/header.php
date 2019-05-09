@@ -175,22 +175,10 @@
                                         </td>
                                     </tr>
 
-							</tbody>
-						</table>
-						<div class="text-center">
-							<button type="button" id="demande_rdv" class="btn btn-primary btn-lg">Faire une demande de rendez-vous</button>
-						</div>
-					</div>
-					<div id="form_rdv">
-						<form class="form" action="<?php echo base_url("Etudiant/demande_rdv_prof");?>" method="post">    
-							<input class="form-control" type="text" name="nom_prof" value="" placeholder="Nom du professeur avec lequel vous voulez prendre rendez vous" required=""/><br>
-							<input class="form-control" type="time" name="heure_debut" value="" placeholder="Heure de début" required=""/><br>
-							<input class="form-control" type="time" name="heure_fin" value="" placeholder="Heure de fin" required=""/><br>
-							<input class="form-control" type="text" name="salle" value="" placeholder="Salle" required=""/><br>                 
-							<input class="btn btn-block btn-success active " type="submit" value="Faire la demande" /><br>
-						</form>
-					</div>
-				</div>
+                                </tbody>
+                            </table>
+
+                        </div>
 
                     </div>
 
@@ -200,4 +188,6 @@
                 </div>
 
             </div>
+
         </div>
+    </div>
