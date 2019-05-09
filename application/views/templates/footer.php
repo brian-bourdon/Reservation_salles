@@ -41,6 +41,8 @@
 
 <!-- Template Main Javascript File -->
 <script src="<?php echo base_url('assets/js/main.js'); ?>"></script>
+<!-- Etudiant Javascript File -->
+<script src="<?php echo base_url('assets/js/accueil_etudiant.js'); ?>"></script>
 
 <script type="text/javascript">
 

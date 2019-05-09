@@ -29,10 +29,10 @@ class User_model extends CI_Model
 					'statut'  => $user->getStatut()
 		);
 		
-		return $this->db->insert($this->table, $data);
+		$res = $this->db->insert($this->table, $data);
+		$idUser = $this->db->insert_id();
+		return array($res, $idUser);
 	}
-	
-	
-	
+
 }
 ?>

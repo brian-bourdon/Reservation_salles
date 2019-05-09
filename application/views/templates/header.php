@@ -152,38 +152,49 @@
 					<h4 class="modal-title">Mes rendez-vous</h4>
 				</div>
 				<div class="modal-body">
+					<div id="mes_rdv">
+						<table class="table table-hover">
+							<thead>
+								<tr>
+									<th scope="col">Numéro de salle</th>
+									<th scope="col">Membres du groupe</th>
+									<th scope="col">Date</th>
+									<th scope="col">Heure de début</th>
+									<th scope="col" class="">Rejoindre le groupe </th>
+								</tr>
+							</thead>
+							<tbody>
 
-					<table class="table table-hover">
-						<thead>
-							<tr>
-								<th scope="col">Numéro de salle</th>
-								<th scope="col">Membres du groupe</th>
-								<th scope="col">Date</th>
-								<th scope="col">Heure de début</th>
-								<th scope="col" class="">Rejoindre le groupe </th>
-							</tr>
-						</thead>
-						<tbody>
+								<tr>
+									<th scope="row">A2</th>
+									<td>@Kyriel, @Brian @Kev</td>
+									<td>12/05/2019</td>
+									<td>09:20</td>
+									<td>
+										<button class='btn btn-danger'> <i class='fa fa-stop'></i> Annuler </button>
+									</td>
+								</tr>
 
-							<tr>
-								<th scope="row">A2</th>
-								<td>@Kyriel, @Brain @Kev</td>
-								<td>12/05/2019</td>
-								<td>09:20</td>
-								<td>
-									<button class='btn btn-danger'> <i class='fa fa-stop'></i> Annuler </button>
-								</td>
-							</tr>
-
-						</tbody>
-					</table>
-					<div class="text-center">
-						<button type="button" href="<?php echo base_url('Site/'); ?>" class="btn btn-primary btn-lg" data-dismiss="modal">Faire une demande de rendez-vous</button>
+							</tbody>
+						</table>
+						<div class="text-center">
+							<button type="button" id="demande_rdv" class="btn btn-primary btn-lg">Faire une demande de rendez-vous</button>
+						</div>
+					</div>
+					<div id="form_rdv">
+						<form class="form" action="<?php echo base_url("Etudiant/demande_rdv_prof");?>" method="post">    
+							<input class="form-control" type="text" name="nom_prof" value="" placeholder="Nom du professeur avec lequel vous voulez prendre rendez vous" required=""/><br>
+							<input class="form-control" type="time" name="heure_debut" value="" placeholder="Heure" required=""/><br>
+							<input class="form-control" type="time" name="heure_fin" value="" placeholder="Heure" required=""/><br>
+							<input class="form-control" type="text" name="salle" value="" placeholder="Salle" required=""/><br>                 
+							<input class="btn btn-block btn-success active " type="submit" value="Faire la demande" /><br>
+						</form>
 					</div>
 				</div>
-				
+
 				<div class="modal-footer">
-					<button type="button" class="btn btn-default btn-block" data-dismiss="modal">Close</button>
+					<button type="button" class="btn btn-default btn-block" id="btn_retour_demande_rdv">Retour</button>
+					<button type="button" class="btn btn-default btn-block" data-dismiss="modal" id="btn_close_demande_rdv">Close</button>
 				</div>
 			</div>
 
