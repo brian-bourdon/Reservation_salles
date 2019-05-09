@@ -15,26 +15,26 @@ $(document).ready(function () {
         $("#form_rdv").hide();
     });
 
-$("#connectProf").click(function () {
-            $("#connectEtudform").hide();
-            $("#Incriptionform").hide();
-            $("#exampleModalLongTitle").text("Se connecter en tant que prof");
-            $("#connectProfform").show();
-        });
+    $("#connectProf").click(function () {
+        $("#connectEtudform").hide();
+        $("#Incriptionform").hide();
+        $("#exampleModalLongTitle").text("Se connecter en tant que prof");
+        $("#connectProfform").show();
+    });
 
-        $("#inscrire").click(function () {
-            $("#connectEtudform").hide();
-            $("#connectProfform").hide();
-            $("#exampleModalLongTitle").text("Inscription étudiant");
-            $("#Incriptionform").show();
-        });
+    $("#inscrire").click(function () {
+        $("#connectEtudform").hide();
+        $("#connectProfform").hide();
+        $("#exampleModalLongTitle").text("Inscription étudiant");
+        $("#Incriptionform").show();
+    });
 
-        $("#connectEtud").click(function () {
-            $("#Incriptionform").hide();
-            $("#connectProfform").hide();
-            $("#exampleModalLongTitle").text("Se connecter en tant qu'étudiant");
-            $("#connectEtudform").show();
-        });
+    $("#connectEtud").click(function () {
+        $("#Incriptionform").hide();
+        $("#connectProfform").hide();
+        $("#exampleModalLongTitle").text("Se connecter en tant qu'étudiant");
+        $("#connectEtudform").show();
+    });
 
 
     let scanner = new Instascan.Scanner({video: document.getElementById('preview')});
