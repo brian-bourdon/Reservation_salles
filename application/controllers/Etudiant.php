@@ -38,6 +38,7 @@ class Etudiant extends CI_Controller {
 		
 	}
 	
+	// Mettre dans user
 	public function demande_rdv_prof()
 	{
 		$data = array(
