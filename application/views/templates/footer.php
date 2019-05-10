@@ -45,15 +45,18 @@
 <script src="<?php echo base_url('assets/js/accueil_etudiant.js'); ?>"></script>
 
 <script> //brian voici l'exemple de ajax
-    $(".searchUser").keyup(function () {
+    $(document).ready(function () {
+        $(".searchUser").keyup(function () {
 
-        var search = $(".searchUser").val();
-        $.ajax({
-            url: "<?= base_url("Site/selectUser") ?>?search=" + search,
-            type: 'GET',
-            success: function (html) {
-                $('#result').html(html);
-            }
+            var search = $(".searchUser").val();
+            $.ajax({
+                url: "<?= base_url("Site/selectUser") ?>?search=" + search,
+                type: 'GET',
+                success: function (html) {
+                    $('#result').html(html);
+                }
+            });
+
         });
 
     });

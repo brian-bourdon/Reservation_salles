@@ -11,7 +11,11 @@
                 <br>
             </header>
 
-            <p class="wow"> <?php //var_dump($_SESSION)     ?></p>
+            <p class="wow" id=""> 
+                <?php
+                 var_dump($AllSalles);
+                ?>
+            </p>
 
 
             <div class="row about-cols">
