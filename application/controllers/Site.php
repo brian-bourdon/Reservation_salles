@@ -24,6 +24,8 @@ class Site extends CI_Controller {
 		parent::__construct();
 		
 		$this->load->model('User_model');
+		$this->load->model('Rendez_vous_model');
+		$this->load->model('Salle_model');
 		//$this->load->library('User');
 	}
 	
@@ -125,7 +127,32 @@ class Site extends CI_Controller {
 		}
 		$this->db->close();
 	}
+
+	public function demande_rdv()
+	{
+		$data = array(
+					'idDemandeur'	=> $this->session->userdata('idUser'),
+					'idInterlocuteur'  => $_POST['nom_prof'], 
+					'HeureDebut'     => $_POST['heure_debut'],
+					'HeureFin'     => $_POST['heure_fin'],
+					'Salle'	  => $_POST['salle']
+		);
+		
+		//TODO: Verif salle
+		
+		$res = $this->Rendez_vous_model->insert_rdv($data);
+		$this->accueil();
+		// return $res;
+		// Kyriel: je pense que tu devrais pouvoir appeler cette fonction en ajax pour insérer un rdv en BDD et sa devrais le faire
+
+	}
 	
+	public function visionner_salles($num_salle=null, $date=null, $heure_debut=null)
+	{
+		$query = $this->Rendez_vous_model->get_salles($num_salle, $date, $heure_debut);
+		var_dump($query->result_array());
+		return $query->result_array();
+	}
 	
 	
 }
