@@ -13,7 +13,7 @@
 
             <p class="wow" id=""> 
                 <?php
-                 var_dump($salles);
+                 if(isset($salles)) var_dump($salles);
                 ?>
             </p>
 
