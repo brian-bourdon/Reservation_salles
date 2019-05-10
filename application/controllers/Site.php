@@ -42,9 +42,7 @@ class Site extends CI_Controller {
             $data['contents'] = 'index';
         }
         $data['controller'] = "site";
-        $this->load->view('templates/template_etudiant', $data);
-        
-        $this->AllSalles();
+        $this->SallesLibre();
     }
 
     public function connect() {
@@ -131,14 +129,14 @@ class Site extends CI_Controller {
         return $query->result_array();
     }
 
-    public function AllSalles() {
+    public function SallesLibre() {
         //voici la partie que jai ajouter. pour le chargement par defaut. son appel est dan la fonction Accueil
         $query = $this->Salle_model->getAllSalles();
         $salles = $query->result_array();
-		
-		$data['contents'] = 'accueil';
+
+        $data['contents'] = 'accueil';
         $data['controller'] = "site";
-		$data['salles'] = $salles;
+        $data['salles'] = $salles;
         $this->load->view('templates/template_etudiant', $data);
     }
 

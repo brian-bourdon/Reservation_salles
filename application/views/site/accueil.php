@@ -12,9 +12,7 @@
             </header>
 
             <p class="wow" id=""> 
-                <?php
-                 if(isset($salles)) var_dump($salles);
-                ?>
+
             </p>
 
 
@@ -196,28 +194,27 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr>
-                                        <th scope="row">A1</th>
-                                        <td>12/05/2019</td>
-                                        <td>12:00</td>
-                                        <td>
-                                            <button class='btn btn-success' id="demande_rdv">
-                                                <i class='fa fa-play'></i> Réserver
-                                            </button>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <th scope="row">A2</th>
-                                        <td>12/05/2019</td>
-                                        <td>09:20</td>
-                                        <td class="text-danger">Se libère à <b>08:45</b></td>
-                                    </tr>
-                                    <tr>
-                                        <th scope="row">A3</th>
-                                        <td>12/05/2019</td>
-                                        <td>08:45</td>
-                                        <td class="text-danger">Se libère à <b>08:45</b></td>
-                                    </tr>
+                                    <?php if (isset($salles)) { ?>
+                                        <?php for ($i = 0; $i < count($salles); $i++) { ?>
+
+                                            <tr>
+                                                <th scope="row"><?= $salles[$i]['titre']; ?></th>
+                                                <td>Aujourd'hui</td>
+                                                <td>12:00</td>
+                                                <td>
+                                                    <?php if ($salles[$i]['statut'] == "libre") { ?>
+                                                        <button class='btn btn-success demande_rdv'>
+                                                            <i class='fa fa-play'></i> Réserver
+                                                        </button>
+                                                    <?php } else { ?>
+                                                        <span class="text-danger">Se libère à <b><?= $salles[$i]['statut']; ?></b></span>
+                                                    <?php } ?>
+                                                </td>
+                                            </tr>
+
+                                        <?php } ?> 
+                                    <?php } ?>
+
                                 </tbody>
                             </table>
                         </header>
