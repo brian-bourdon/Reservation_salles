@@ -135,8 +135,11 @@ class Site extends CI_Controller {
         //voici la partie que jai ajouter. pour le chargement par defaut. son appel est dan la fonction Accueil
         $query = $this->Salle_model->getAllSalles();
         $salles = $query->result_array();
-        $AllSalles = array('salles' => $salles);
-        $this->load->view('site/accueil', $AllSalles);
+		
+		$data['contents'] = 'accueil';
+        $data['controller'] = "site";
+		$data['salles'] = $salles;
+        $this->load->view('templates/template_etudiant', $data);
     }
 
 }
