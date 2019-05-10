@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : 127.0.0.1:3306
--- Généré le :  ven. 10 mai 2019 à 11:57
+-- Généré le :  ven. 10 mai 2019 à 13:45
 -- Version du serveur :  5.7.24
 -- Version de PHP :  7.2.14
 
@@ -36,8 +36,9 @@ CREATE TABLE IF NOT EXISTS `rendez_vous` (
   `Date` date NOT NULL DEFAULT '0001-01-01',
   `HeureDebut` time NOT NULL,
   `HeureFin` time NOT NULL,
-  `Salle` varchar(50) NOT NULL,
+  `idSalle` varchar(50) NOT NULL,
   `status` varchar(255) NOT NULL,
+  `titre` varchar(10) NOT NULL,
   PRIMARY KEY (`idRdv`)
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 
@@ -45,10 +46,10 @@ CREATE TABLE IF NOT EXISTS `rendez_vous` (
 -- Déchargement des données de la table `rendez_vous`
 --
 
-INSERT INTO `rendez_vous` (`idRdv`, `idDemandeur`, `idInterlocuteur`, `Date`, `HeureDebut`, `HeureFin`, `Salle`, `status`) VALUES
-(1, 9, 9999, '0001-01-01', '15:00:00', '16:00:00', 'A13', ''),
-(2, 9, 0, '0001-01-01', '12:00:00', '14:00:00', 'A15', ''),
-(3, 9, 0, '0001-01-01', '13:00:00', '14:00:00', 'A15', '');
+INSERT INTO `rendez_vous` (`idRdv`, `idDemandeur`, `idInterlocuteur`, `Date`, `HeureDebut`, `HeureFin`, `idSalle`, `status`, `titre`) VALUES
+(1, 9, 9999, '0001-01-01', '15:00:00', '16:00:00', '1', '', 'A01'),
+(2, 9, 0, '0001-01-01', '12:00:00', '14:00:00', '1', '', 'A01'),
+(3, 9, 0, '0001-01-01', '13:00:00', '14:00:00', '2', '', 'A02');
 
 -- --------------------------------------------------------
 
