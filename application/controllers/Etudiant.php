@@ -39,22 +39,7 @@ class Etudiant extends CI_Controller {
 	}
 	
 	// Mettre dans user
-	public function demande_rdv_prof()
-	{
-		$data = array(
-					'idDemandeur'	=> $this->session->userdata('idUser'),
-					'idInterlocuteur'  => $_POST['nom_prof'], 
-					'HeureDebut'     => $_POST['heure_debut'],
-					'HeureFin'     => $_POST['heure_fin'],
-					'Salle'	  => $_POST['salle']
-		);
-		
-		//TODO: Verif salle
-		
-		return $this->Rendez_vous_model->insert_rdv($data);
-		// Kyriel: je pense que tu devrais pouvoir appeler cette fonction en ajax pour insérer un rdv en BDD et sa devrais le faire
 
-	}
 
 	
 }
