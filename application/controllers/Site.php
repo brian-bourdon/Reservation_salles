@@ -149,8 +149,8 @@ class Site extends CI_Controller {
 	
 	public function visionner_salles($num_salle=null, $date=null, $heure_debut=null)
 	{
-		$query = $this->Rendez_vous_model->get_salles("A01", "2019-06-06", "15:00");
-		//var_dump($query->result_array());
+		$query = $this->Rendez_vous_model->get_salles($num_salle, $date, $heure_debut);
+		var_dump($query->result_array());
 		return $query->result_array();
 	}
 	

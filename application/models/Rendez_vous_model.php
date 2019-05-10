@@ -17,7 +17,7 @@ class Rendez_vous_model extends CI_Model
         if(isset($num_salle)) $this->db->where('titre', $num_salle);
         if(isset($date) && isset($heure_debut))
         {
-        	$where = "(Date, HeureDebut) != ('2019-06-06', '15:00')";
+        	$where = "(Date, HeureDebut) != ('".$date."','".$heure_debut."')";
 			$this->db->where($where);
 		}
         return $this->db->get(); 
