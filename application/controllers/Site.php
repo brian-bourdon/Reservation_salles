@@ -125,6 +125,11 @@ class Site extends CI_Controller {
 		}
 		$this->db->close();
 	}
+
+	public function visionner_salles()
+	{
+		
+	}
 	
 	
 	
