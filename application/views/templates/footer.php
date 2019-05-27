@@ -67,11 +67,13 @@
             type: 'GET',
             dataType: 'html',
             success: function (html) {
+                $('.view_salles').remove();
                 $(html).appendTo('#vue_salles');
             }
         });
 
     });
+
 </script>
 
 </body>

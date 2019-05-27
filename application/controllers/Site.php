@@ -127,18 +127,20 @@ class Site extends CI_Controller {
 		$this->db->close();
 	}
 	
+	// Function appelé par ajax
+	//TODO: filtre date heure + bug duplication des affichages de salles a chaque appel ajax a
 	public function visionner_salles()
 	{
+
 		if(isset($_GET['num_salles'])) $num_salles = $_GET['num_salles'];
 		else $num_salles = null;
 		if(isset($_GET['date'])) $date = $_GET['date'];
-		else $num_salles = null;
-		if(isset($_GET['heure_debut'])) $num_salles = $_GET['heure_debut'];
+		else $date = null;
+		if(isset($_GET['heure_debut'])) $heure_debut = $_GET['heure_debut'];
 		else $heure_debut = null;
 		$html = "";
-
-		foreach ($res = $this->Rendez_vous_model->get_salles()->result_array()  as $key => $value) {
-			$html .= '<tr>
+		foreach ($this->Rendez_vous_model->get_salles($num_salles, $date, $heure_debut)->result_array()  as $key => $value) {
+			$html .= '<tr class= "view_salles">
                        	<th scope="row">'.$value['titre'].'</th>
                         <td>'.$value['Date'].'</td>
                         <td>'.$value['HeureDebut'].'</td>
