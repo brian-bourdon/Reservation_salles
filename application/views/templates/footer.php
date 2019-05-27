@@ -57,21 +57,25 @@
         });
 
     });
-    $(".searchnum").keyup(function () {
 
-        var num_salles = $("#num_salles").val();
-        var date = $("#date").val();
-        var heure_debut = $("#heure_debut").val();
-        $.ajax({
-            url: "<?= base_url("Site/visionner_salles") ?>?num_salles=" + num_salles + "&date=" + date + "&heure_debut=" + heure_debut,
-            type: 'GET',
-            dataType: 'html',
-            success: function (html) {
-                $('.view_salles').remove();
-                $(html).appendTo('#vue_salles');
-            }
-        });
+    // ajax liste des salles
+    $(document).ready(function() {
+        $(".searchnum").keyup(function () {
 
+            var num_salles = $("#num_salles").val();
+            var date = $("#date").val();
+            var heure_debut = $("#heure_debut").val();
+            $.ajax({
+                url: "<?= base_url("Site/visionner_salles") ?>?num_salles=" + num_salles + "&date=" + date + "&heure_debut=" + heure_debut,
+                type: 'GET',
+                dataType: 'html',
+                success: function (html) {
+                    $('.view_salles').remove();
+                    $(html).appendTo('#vue_salles');
+                }
+            });
+
+        }).keyup();
     });
 
 </script>

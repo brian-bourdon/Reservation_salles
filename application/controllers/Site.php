@@ -18,13 +18,15 @@ class Site extends CI_Controller {
 	 * map to /index.php/welcome/<method_name>
 	 * @see https://codeigniter.com/user_guide/general/urls.html
 	 */
-	 
+	
 	public function __construct()
 	{
 		parent::__construct();
-		
+
+		date_default_timezone_set('Europe/Paris');
 		$this->load->model('User_model');
 		$this->load->model('Rendez_vous_model');
+		$this->load->model('Salle_model');
 		//$this->load->library('User');
 	}
 	
@@ -128,10 +130,9 @@ class Site extends CI_Controller {
 	}
 	
 	// Function appelé par ajax
-	//TODO: filtre date heure + bug duplication des affichages de salles a chaque appel ajax a
+	//TODO: filtre date heure + bug duplication des affichages de salles a chaque appel ajax
 	public function visionner_salles()
 	{
-
 		if(isset($_GET['num_salles'])) $num_salles = $_GET['num_salles'];
 		else $num_salles = null;
 		if(isset($_GET['date'])) $date = $_GET['date'];
@@ -139,11 +140,22 @@ class Site extends CI_Controller {
 		if(isset($_GET['heure_debut'])) $heure_debut = $_GET['heure_debut'];
 		else $heure_debut = null;
 		$html = "";
+
 		foreach ($this->Rendez_vous_model->get_salles($num_salles, $date, $heure_debut)->result_array()  as $key => $value) {
+			if(!empty($date) && !empty($heure_debut))
+			{
+				$real_date = $value['Date'];
+				$real_heure_debut = $value['HeureDebut'];			}
+			else
+			{
+				$real_date = date('d-m-Y');
+				$real_heure_debut = date('H:i');
+			}
+
 			$html .= '<tr class= "view_salles">
                        	<th scope="row">'.$value['titre'].'</th>
-                        <td>'.$value['Date'].'</td>
-                        <td>'.$value['HeureDebut'].'</td>
+                        <td>'.$real_date.'</td>
+                        <td>'.$real_heure_debut.'</td>
                         <td>
                         <button class="btn btn-success" id="demande_rdv">
                             <i class="fa fa-play"></i> Réserver
@@ -151,10 +163,8 @@ class Site extends CI_Controller {
                         </td>
                     </tr>';
 		}
-
 		echo $html;
-	}
-	
+	}	
 }
 
 
