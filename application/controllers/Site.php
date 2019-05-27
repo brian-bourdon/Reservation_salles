@@ -24,6 +24,7 @@ class Site extends CI_Controller {
 		parent::__construct();
 		
 		$this->load->model('User_model');
+		$this->load->model('Rendez_vous_model');
 		//$this->load->library('User');
 	}
 	
@@ -126,7 +127,31 @@ class Site extends CI_Controller {
 		$this->db->close();
 	}
 	
-	
+	public function visionner_salles()
+	{
+		if(isset($_GET['num_salles'])) $num_salles = $_GET['num_salles'];
+		else $num_salles = null;
+		if(isset($_GET['date'])) $date = $_GET['date'];
+		else $num_salles = null;
+		if(isset($_GET['heure_debut'])) $num_salles = $_GET['heure_debut'];
+		else $heure_debut = null;
+		$html = "";
+
+		foreach ($res = $this->Rendez_vous_model->get_salles()->result_array()  as $key => $value) {
+			$html .= '<tr>
+                       	<th scope="row">'.$value['titre'].'</th>
+                        <td>'.$value['Date'].'</td>
+                        <td>'.$value['HeureDebut'].'</td>
+                        <td>
+                        <button class="btn btn-success" id="demande_rdv">
+                            <i class="fa fa-play"></i> Réserver
+                        </button>
+                        </td>
+                    </tr>';
+		}
+
+		echo $html;
+	}
 	
 }
 

@@ -179,41 +179,19 @@
                                 <thead>
                                     <tr>
                                         <th scope="col">Numéro de salle
-                                            <input class="form-control" type="text" name="searchnum" value="" placeholder="Rechercher" required=""/><br>
+                                            <input class="form-control searchnum" id="num_salles" type="text" name="searchnum" value="" placeholder="Rechercher" required=""/><br>
                                         </th>
                                         <th scope="col">Date
-                                            <input class="form-control" type="date" name="date" value="" placeholder="Rechercher a une date" required=""/><br>
+                                            <input class="form-control searchnum" id="date" type="date" name="date" value="" placeholder="Rechercher a une date" required=""/><br>
 
                                         </th>
                                         <th scope="col">Heure de début
-                                            <input class="form-control" type="time" name="time  " value="" placeholder="Rechercher a une date" required=""/><br>
+                                            <input class="form-control searchnum" id="heure_debut" type="time" name="time  " value="" placeholder="Rechercher a une date" required=""/><br>
                                         </th>
                                         <th scope="col" class="">Option </th>
                                     </tr>
                                 </thead>
-                                <tbody>
-                                    <tr>
-                                        <th scope="row">A1</th>
-                                        <td>12/05/2019</td>
-                                        <td>12:00</td>
-                                        <td>
-                                            <button class='btn btn-success' id="demande_rdv">
-                                                <i class='fa fa-play'></i> Réserver
-                                            </button>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <th scope="row">A2</th>
-                                        <td>12/05/2019</td>
-                                        <td>09:20</td>
-                                        <td class="text-danger">Se libère à <b>08:45</b></td>
-                                    </tr>
-                                    <tr>
-                                        <th scope="row">A3</th>
-                                        <td>12/05/2019</td>
-                                        <td>08:45</td>
-                                        <td class="text-danger">Se libère à <b>08:45</b></td>
-                                    </tr>
+                                <tbody id="vue_salles">
                                 </tbody>
                             </table>
                         </header>
