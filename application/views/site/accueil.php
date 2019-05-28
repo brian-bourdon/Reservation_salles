@@ -11,7 +11,7 @@
                 <br>
             </header>
 
-            <p class="wow"> <?php //var_dump($_SESSION)     ?></p>
+            <p class="wow"> <?php //var_dump($_SESSION)      ?></p>
 
 
             <div class="row about-cols">
@@ -186,7 +186,10 @@
 
                                         </th>
                                         <th scope="col">Heure de début
-                                            <input class="form-control searchnum" id="heure_debut" type="time" name="time  " value="" placeholder="Rechercher a une date" required=""/><br>
+                                            <input class="form-control searchnum" id="heure_debut" type="time" name="time  " value="" required=""/><br>
+                                        </th>
+                                        <th scope="col">Heure de Fin
+                                            <input class="form-control searchnum" id="heure_fin" type="time" name="time  " value="" required=""/><br>
                                         </th>
                                         <th scope="col" class="">Option </th>
                                     </tr>
@@ -198,11 +201,13 @@
 
                         <div id="form_rdv">
                             <form class="form" action="<?php echo base_url("Etudiant/demande_rdv_prof"); ?>" method="post">                           
-                                <input class="form-control" type="text" name="salle" value="" placeholder="Salle" required=""/><br>  
+                                <input class="form-control" type="text" id="titresalle" name="salle" value="" placeholder="Salle" required="" disabled/><br>  
+                                <input class="form-control" type="text" name="date" id="datesalle" value="" placeholder="date" required="" disabled/><br>
+                                <input class="form-control" type="text" name="heure_debut" id="heure_debut1" value="" placeholder="heure_debut" required="" disabled/><br>
+                                <input class="form-control" type="text" name="heure_fin" id="heure_fin1" value="" placeholder="Vous n'avez pas saisi l'heure de fin" required="" disabled/><br>
+
                                 <input class="form-control searchUser" type="text" name="nom_prof" value="" placeholder="Nom du professeur avec lequel vous voulez prendre rendez vous" required=""/><br>
                                 <div id="result"></div>
-                                <input class="form-control" type="time" name="heure_debut" value="" placeholder="Heure" required=""/><br>
-                                <input class="form-control" type="time" name="heure_fin" value="" placeholder="Heure" required=""/><br>
                                 <input class="btn btn-block btn-success active " type="submit" value="Faire la demande" /><br>
                             </form>
                         </div>
