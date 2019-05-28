@@ -52,7 +52,9 @@
             url: "<?= base_url("Site/selectUser") ?>?search=" + search,
             type: 'GET',
             success: function (html) {
+                var idProf = html.split(' ')[0];
                 $('#result').html(html);
+                $('#idProf').val(idProf);
             }
         });
 
@@ -60,7 +62,7 @@
 
     // ajax liste des salles
     $(document).ready(function() {
-        $(".searchnum").keyup(function () {
+        $(".searchnum").blur(function () {
 
             var num_salles = $("#num_salles").val();
             var date = $("#date").val();
@@ -75,7 +77,7 @@
                 }
             });
 
-        }).keyup();
+        }).blur();
     });
 
 </script>

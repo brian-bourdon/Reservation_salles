@@ -5,8 +5,18 @@
     ============================-->
     <section id="about">
         <div class="container">
+            <header class="section-header"> 
+                <br> <br>
+    <?php 
+        if(!empty($this->session->flashdata('create_rdv')))
+        echo '<div class="alert alert-'.$this->session->flashdata('create_rdv')['statut'].'" role="alert">'.
+                  $this->session->flashdata('create_rdv')['msg'].
+            '<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+            </button>
+            </div>';
+    ?>
 
-            <header class="section-header"> <br> <br>
                 <h3>Welcome <?= $_SESSION['prenom'] . " " . $_SESSION['nom'] ?></h3>
                 <br>
             </header>
@@ -165,7 +175,6 @@
     <!-- Modal -->
     <div id="myModal" class="modal fade" role="dialog">
         <div class="modal-dialog modal-lg">
-
             <!-- Modal content-->
             <div class="modal-content">
 
@@ -182,14 +191,11 @@
                                             <input class="form-control searchnum" id="num_salles" type="text" name="searchnum" value="" placeholder="Rechercher" required=""/><br>
                                         </th>
                                         <th scope="col">Date
-                                            <input class="form-control searchnum" id="date" type="date" name="date" value="" placeholder="Rechercher a une date" required=""/><br>
+                                            <input class="form-control searchnum" id="date" type="date" min="<?php echo date('Y-m-d');?>" name="date" value="" placeholder="Rechercher a une date" required=""/><br>
 
                                         </th>
-                                        <th scope="col">Heure de début
-                                            <input class="form-control searchnum" id="heure_debut" type="time" name="time  " value="" required=""/><br>
-                                        </th>
-                                        <th scope="col">Heure de Fin
-                                            <input class="form-control searchnum" id="heure_fin" type="time" name="time  " value="" required=""/><br>
+                                        <th scope="col">Heure
+                                            <input class="form-control searchnum" id="heure_debut" type="time" min="<?php echo date('H:i');?>" max="23:59" name="time" value="" required=""/><br>
                                         </th>
                                         <th scope="col" class="">Option </th>
                                     </tr>
@@ -200,13 +206,14 @@
                         </header>
 
                         <div id="form_rdv">
-                            <form class="form" action="<?php echo base_url("Etudiant/demande_rdv_prof"); ?>" method="post">                           
-                                <input class="form-control" type="text" id="titresalle" name="salle" value="" placeholder="Salle" required="" disabled/><br>  
-                                <input class="form-control" type="text" name="date" id="datesalle" value="" placeholder="date" required="" disabled/><br>
-                                <input class="form-control" type="text" name="heure_debut" id="heure_debut1" value="" placeholder="heure_debut" required="" disabled/><br>
-                                <input class="form-control" type="text" name="heure_fin" id="heure_fin1" value="" placeholder="Vous n'avez pas saisi l'heure de fin" required="" disabled/><br>
+                            <form class="form" action="<?php echo base_url("Etudiant/demande_rdv"); ?>" method="post">                           
+                                <input class="form-control" type="text" id="titresalle" name="salle" value="" placeholder="Salle" required="" readonly/><br>  
+                                <input class="form-control" type="text" name="date" id="datesalle" value="" placeholder="date" required="" readonly/><br>
+                                <input class="form-control" type="time" name="heure_debut" id="heure_debut1" value="" placeholder="Heure de début" required="" readonly/><br>
+                                <input class="form-control" type="time" name="heure_fin" id="heure_fin1" value="" placeholder="Heure de fin" required=""/><br>
 
-                                <input class="form-control searchUser" type="text" name="nom_prof" value="" placeholder="Nom du professeur avec lequel vous voulez prendre rendez vous" required=""/><br>
+                                <input class="form-control searchUser" type="text" id="nom_prof" name="nom_prof" value="" placeholder="Nom du professeur et/ou nom des membres de votre groupe" required=""/><br>
+                                <input class="form-control searchUser" type="hidden" id="idProf" name="idProf" value=""/><br>
                                 <div id="result"></div>
                                 <input class="btn btn-block btn-success active " type="submit" value="Faire la demande" /><br>
                             </form>

@@ -102,15 +102,15 @@ class Site extends CI_Controller {
 
         if ($query->num_rows() == 1) {
             $this->load->library('User', $query->result_array()[0]);
-            var_dump($this->user);
+            //var_dump($this->user);
 
-            foreach ($this->user as $key => $value) {
+            foreach ($query->result_array() as $key => $value) {
                 $html .= '<button class="btn btn-primary add" value="' . $value['nom'] . '">' 
                         . $value['nom'] . 
                         '</button>';
             }
+            echo $query->result_array()[0]['idUser']." ".$query->result_array()[0]['nom']." ".$query->result_array()[0]['prenom'];
             return $html;
-            
         }
         $this->db->close();
     }
@@ -132,29 +132,99 @@ class Site extends CI_Controller {
             $heure_debut = null;
         $html = "";
 
-        foreach ($this->Rendez_vous_model->get_salles($num_salles, $date, $heure_debut)->result_array() as $key => $value) {
+        $query_get_salles = $this->Rendez_vous_model->get_salles($num_salles, $date, $heure_debut);
+        foreach ($query_get_salles->result_array() as $key => $value) {
             if (!empty($date) && !empty($heure_debut)) {
-                $real_date = $value['Date'];
-                $real_heure_debut = $value['HeureDebut'];
+
+                $real_date_obj = new DateTime($date);
+                $real_date = $real_date_obj->format('d-m-Y');
+
+                $real_heure_debut_obj = new DateTime($heure_debut);
+                $min = $real_heure_debut_obj->format('i');
+
+                if($min > 0)
+                {
+                    $real_heure_debut_obj->modify("+ 1 hour");
+                }
+
+                $real_heure_debut = $real_heure_debut_obj->format('H:00');
+
             } else {
-                $real_date = date('d-m-Y');
-                $real_heure_debut = date('H:i');
+
+                $real_date_obj = new DateTime();
+                $min = $real_date_obj->format('i');
+                if($min > 0)
+                {
+
+                    $real_date_obj->modify("+ 1 hour");
+                }
+                $real_date = $real_date_obj->format('d-m-Y');
+                $real_heure_debut = $real_date_obj->format('H:00');
+
             }
 
             $html .= '<tr class= "view_salles">
                        	<th scope="row">' . $value['titre'] . '</th>
                         <td>' . $real_date . '</td>
-                        <td>' . $real_heure_debut . '</td>
-                        <td> - </td>
-                        <td>
-                        <button class="btn btn-success demande_rdv" value="' . $value['titre'] . '/' . $real_date . '/' . $real_heure_debut . '">
-                            <i class="fa fa-play"></i> Réserver
-                        </button>
-                        </td>
-                    </tr>';
+                        <td>' . $real_heure_debut  . '</td>
+                        <td>';
+            //echo "test ".$this->_isAvailable($value['titre'], $real_date_obj->format('Y-m-d'), $real_heure_debut);
+            $data = $this->_isAvailable($value['titre'], $real_date_obj->format('Y-m-d'), $real_heure_debut);
+            //var_dump($data);
+            if($data['statut'])
+            {
+                $html .= '<button class="btn btn-success demande_rdv" value="' . $value['titre'] . '/' . $real_date . '/' . $real_heure_debut . '">
+                                <i class="fa fa-play"></i> Réserver
+                            </button>
+                            </td>
+                        </tr>';
+            }
+            else
+            {
+                $res = $this->nextAvailableHour($data['data']);
+
+                if(!$res);
+                else
+                {
+                    $html .= '<span style="color:red">Se libère à '.$res.'</span>';
+                }
+            }
         }
         echo $html;
     }
+
+    private function _isAvailable($num_salles, $date, $heure_debut)
+    {
+        $query = $this->Rendez_vous_model->isSalleAvailable($num_salles, $date, $heure_debut);
+        //var_dump($query->result_array());
+        $data = array();
+        if($query->num_rows() == 0)
+        {
+            $data['statut'] = true;
+        }
+        else
+        {
+            $data['statut'] = false;
+            $data['data'] = $query->result_array();
+        }
+        return $data;
+    }
+
+    private function nextAvailableHour($res_array)
+    {
+        //var_dump($res_array);
+        if(count($res_array) > 1)
+        {
+            for($i=1; $i < count($res_array); $i++)
+            {
+                if($res_array[$i-1]['HeureFin'] < $res_array[$i]['HeureDebut']) return $res_array[$i-1]['HeureFin'];       
+            }
+            if($res_array[$i-1]['HeureFin'] < '23:00') return $res_array[$i-1]['HeureFin'];
+            else return false;
+        }
+        else return $res_array[0]['HeureFin'];
+    }
+
 
 }
 
