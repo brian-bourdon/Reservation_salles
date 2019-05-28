@@ -45,24 +45,27 @@
 <script src="<?php echo base_url('assets/js/accueil_etudiant.js'); ?>"></script>
 
 <script> //brian voici l'exemple de ajax
-    $(".searchUser").keyup(function () {
 
-        var search = $(".searchUser").val();
-        $.ajax({
-            url: "<?= base_url("Site/selectUser") ?>?search=" + search,
-            type: 'GET',
-            success: function (html) {
-                var idProf = html.split(' ')[0];
-                $('#result').html(html);
-                $('#idProf').val(idProf);
-            }
+    $(document).ready(function () {
+
+
+        $(".searchUser").keyup(function () {
+
+            var taglist = $("#nom_prof").val();
+            var dernier_mot = taglist.split('; ').pop();
+            $.ajax({
+                url: "<?= base_url("Site/selectUser") ?>?search=" + dernier_mot,
+                type: 'GET',
+                success: function (html) {
+                    var idProf = html.split(' ')[0];
+                    $('#result').html(html);
+                    $('#idProf').val(idProf);
+                }
+            });
+
         });
 
-    });
-
-    // ajax liste des salles
-    $(document).ready(function() {
-        $(".searchnum").blur(function () {
+        function recherche() {
 
             var num_salles = $("#num_salles").val();
             var date = $("#date").val();
@@ -77,7 +80,27 @@
                 }
             });
 
+
+        }
+
+        // ajax liste des salles
+        $(".searchnum").blur(function () {
+
+            recherche();
+
         }).blur();
+
+        $(".searchnum").change(function () {
+
+          recherche();
+        });
+
+        $(".searchnum").keyup(function () {
+
+         recherche();
+         
+        });
+
     });
 
 </script>

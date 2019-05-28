@@ -7,15 +7,16 @@ $(document).ready(function () {
         return i;
     }
 
-    function startTime() {    function addZero(i) {
-        if (i < 10) {
-            i = "0" + i;
+    function startTime() {
+        function addZero(i) {
+            if (i < 10) {
+                i = "0" + i;
+            }
+            return i;
         }
-        return i;
-    }
         var dt = new Date();
         var time = addZero(dt.getHours()) + ":" + addZero(dt.getMinutes());
-        $("#heure_debut").val(time);    
+        $("#heure_debut").val(time);
     }
     startTime();
 
@@ -96,6 +97,13 @@ $(document).ready(function () {
         scanner.stop();
     });
 
+
+    $("#form_rdv").on("click", ".ok", function () {
+        var mail = $(this).val();
+        var taglist = $("#nom_prof").val().replace(($("#nom_prof").val().split("; "))[($("#nom_prof").val().split("; ")).length - 1] , "");
+       
+        $("#nom_prof").val( taglist + mail +'; ');
+    });
 
 
 });

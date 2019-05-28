@@ -102,15 +102,13 @@ class Site extends CI_Controller {
 
         if ($query->num_rows() == 1) {
             $this->load->library('User', $query->result_array()[0]);
-            //var_dump($this->user);
 
             foreach ($query->result_array() as $key => $value) {
-                $html .= '<button class="btn btn-primary add" value="' . $value['nom'] . '">' 
-                        . $value['nom'] . 
+                $html .= '<button type="button" class="btn btn-primary ok" value="'.$query->result_array()[0]['email'].'">' 
+                        .$query->result_array()[0]['nom']." ".$query->result_array()[0]['prenom'].
                         '</button>';
             }
-            echo $query->result_array()[0]['idUser']." ".$query->result_array()[0]['nom']." ".$query->result_array()[0]['prenom'];
-            return $html;
+            echo $html;
         }
         $this->db->close();
     }
