@@ -45,7 +45,7 @@
                             <img src="<?php echo base_url('assets/img/about-plan.jpg'); ?>" alt="" class="img-fluid">
                             <div class="icon"><i class="ion-ios-list-outline"></i></div>
                         </div>
-                        <h2 class="title"><a href="#">Voir mes rendez-vous</a></h2>
+                        <h2 class="title"><a href="#">Voir mes réservations</a></h2>
                         <p>
                             Pouvoir faire une demande de prise de rdv avec un prof ou des étudiants: si le prof exepte de vous recevoir la salle sera réserver </p>
                     </div>
@@ -191,11 +191,11 @@
                                             <input class="form-control searchnum" id="num_salles" type="text" name="searchnum" value="" placeholder="Rechercher" required=""/><br>
                                         </th>
                                         <th scope="col">Date
-                                            <input class="form-control searchnum" id="date" type="date" min="<?php echo date('Y-m-d'); ?>" name="date" value="" placeholder="Rechercher a une date" required=""/><br>
+                                            <input class="form-control searchnum" id="date" type="date" min="<?php echo date('Y-m-d'); ?>" name="date" value="<?php echo date('Y-m-d'); ?>" placeholder="Rechercher a une date" required=""/><br>
 
                                         </th>
                                         <th scope="col">Heure
-                                            <input class="form-control searchnum" id="heure_debut" type="time" min="<?php echo date('H:i'); ?>" max="23:59" name="time" value="" required=""/><br>
+                                            <input class="form-control searchnum" id="heure_debut" type="time" min="<?php echo date('H:i'); ?>" max="23:00" name="time" value="" required=""/><br>
                                         </th>
                                         <th scope="col" class="">Option </th>
                                     </tr>

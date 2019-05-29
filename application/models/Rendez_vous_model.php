@@ -34,17 +34,14 @@ class Rendez_vous_model extends CI_Model
         $this->db->from($this->table);
         $this->db->where('titre', $num_salle);
         $this->db->where('Date', $date);
-        $this->db->where('HeureDebut <=', $heure_debut);
+        //$this->db->where('HeureDebut <=', $heure_debut);
         $this->db->where('HeureFin >', $heure_debut);
         $this->db->order_by('HeureFin ASC');
 
         return $this->db->get();
     }
 
-    public function getHeureFin()
-    {
 
-    }
 }
 
 

@@ -9,6 +9,7 @@ class Etudiant extends CI_Controller {
 		
 		$this->load->model('User_model');
 		$this->load->model('Rendez_vous_model');
+		$this->load->model('Salle_model');
 		//$this->load->library('User');
 	}
 	
@@ -41,36 +42,71 @@ class Etudiant extends CI_Controller {
 	// Mettre dans user
 	public function demande_rdv()
 	{
-		var_dump($_POST);
+		$mails_demandeurs = explode(";", $_POST['nom_prof']);
+		$tab_verif_mail = array();
 		$now = new DateTime('now');
 		$date = new DateTime($_POST['date']);
-		$data = array(
+
+		$salle = $this->Salle_model->getSalleByNumSalles($_POST['salle']);
+		$idSalle = "";
+		if ($salle->num_rows() == 1) {
+			$idSalle = $salle->result_array()[0]['idSalle'];
+		}
+
+		foreach ($mails_demandeurs as $key => $mail) {
+			if(!empty(trim($mail)))
+			{
+				if(!in_array(trim($mail), $tab_verif_mail))
+				{
+					array_push($tab_verif_mail, trim($mail));
+				}
+			}
+		}
+
+		foreach ($tab_verif_mail as $key => $value) {
+			$user = $this->User_model->get_user_by_mail($value)->result_array()[0];
+			$this->load->library('User');
+
+			$this->user->setIdUser($user['idUser']);
+			$this->user->setEmail($user['email']);
+			$this->user->setNom($user['nom']);
+			$this->user->setPrenom($user['prenom']);
+			$this->user->setPwd($user['pwd']);
+			$this->user->setStatut($user['statut']);
+
+			if($_POST['heure_fin'] == "00:00") $heure_fin = "23:59";
+			else $heure_fin = $_POST["heure_fin"];
+
+			$data = array(
 					'idDemandeur'	=> $this->session->userdata('idUser'),
-					'idInterlocuteur'  => $_POST['idProf'],
+					'idInterlocuteur'  => $this->user->getIdUser(),
 					'Date'		=> $date->format('Y-m-d'),
 					'HeureDebut'     => $_POST['heure_debut'],
-					'HeureFin'		=> $_POST['heure_fin'],
-					'titre'	  => $_POST['salle']
-		);
+					'HeureFin'		=> $heure_fin,
+					'titre'	  => $_POST['salle'],
+					'idSalle' => $idSalle
+			);
 
+			//TODO: Verif salle
+			$info = array();
+			$info['statut'] = true;
+			if($this->Rendez_vous_model->insert_rdv($data)) 
+			{
+				$info['msg'] = "Votre rendez-vous a bien été crée";
+				$info['statut'] &= true;
+			}
+			else 
+			{
+				$info['msg'] = 'Rendez-vous non crée';
+				$info['statut'] &= false;
+			}
+		}
 
-		//TODO: Verif salle
-		$info = array();
-		if($this->Rendez_vous_model->insert_rdv($data)) 
-		{
-			$info['msg'] = "Votre rendez-vous a bien été crée";
-			$info['statut'] = "success";
-		}
-		else 
-		{
-			$info['msg'] = 'Rendez-vous non crée';
-			$info['statut'] = "danger";
-		}
+		if($info['statut']) $info['statut'] = "success";
+		else $info['statut'] = "danger";
+
 		$this->session->set_flashdata('create_rdv', $info);
 		redirect('Site/accueil');
-
-
 	}
 
-	
 }

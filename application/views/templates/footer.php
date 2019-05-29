@@ -57,9 +57,7 @@
                 url: "<?= base_url("Site/selectUser") ?>?search=" + dernier_mot,
                 type: 'GET',
                 success: function (html) {
-                    var idProf = html.split(' ')[0];
                     $('#result').html(html);
-                    $('#idProf').val(idProf);
                 }
             });
 

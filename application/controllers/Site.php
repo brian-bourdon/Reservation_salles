@@ -59,7 +59,7 @@ class Site extends CI_Controller {
 
             $this->load->library('User', $query->result_array()[0]);
 
-            var_dump($this->user);
+            //var_dump($this->user);
 
             if (null !== $this->user->getPwd() && $this->user->getPwd() === $mdp && $statut == $this->user->getStatut()) {
                 $user_data = array(
@@ -181,7 +181,11 @@ class Site extends CI_Controller {
             {
                 $res = $this->nextAvailableHour($data['data']);
 
-                if(!$res);
+
+                if(!$res)
+                {
+                    $html .= '<span style="color:red">Occupée toute la journée</span>';
+                }
                 else
                 {
                     $html .= '<span style="color:red">Se libère à '.$res.'</span>';
@@ -194,7 +198,6 @@ class Site extends CI_Controller {
     private function _isAvailable($num_salles, $date, $heure_debut)
     {
         $query = $this->Rendez_vous_model->isSalleAvailable($num_salles, $date, $heure_debut);
-        //var_dump($query->result_array());
         $data = array();
         if($query->num_rows() == 0)
         {
@@ -210,17 +213,24 @@ class Site extends CI_Controller {
 
     private function nextAvailableHour($res_array)
     {
+        $i = 1;
+
         //var_dump($res_array);
+
         if(count($res_array) > 1)
         {
             for($i=1; $i < count($res_array); $i++)
             {
-                if($res_array[$i-1]['HeureFin'] < $res_array[$i]['HeureDebut']) return $res_array[$i-1]['HeureFin'];       
+                if($res_array[$i-1]['HeureFin'] < $res_array[$i]['HeureDebut']) return $res_array[$i-1]['HeureFin'];
             }
-            if($res_array[$i-1]['HeureFin'] < '23:00') return $res_array[$i-1]['HeureFin'];
+            if($res_array[$i-1]['HeureFin']  <= '23:00:00') return $res_array[$i-1]['HeureFin'];
             else return false;
         }
-        else return $res_array[0]['HeureFin'];
+        else
+        {
+            if($res_array[$i-1]['HeureFin'] <= '23:00:00') return $res_array[0]['HeureFin'];
+            else return false;
+        }
     }
 
 
