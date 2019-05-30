@@ -182,7 +182,7 @@
                     <div class="container">
 
                         <header class="section-header wow fadeInUp"  id="mes_rdv">
-                            <h3>Listes des salles</h3>
+                            <h3>Liste des salles</h3>
 
                             <table class="table table-hover">
                                 <thead>

@@ -100,12 +100,19 @@ class Site extends CI_Controller {
         $html = "";
         $query = $this->User_model->get_users($search);
 
-        if ($query->num_rows() == 1) {
+        if ($query->num_rows() > 0 && !empty($search) && strlen($search) > 2) {
             $this->load->library('User', $query->result_array()[0]);
+            
+            if($this->user->getStatut() == "etudiant") $type_btn = "primary";
+            else if($this->user->getStatut() == "professeur") $type_btn = "warning";
+            else if($this->user->getStatut() == "admin") $type_btn = "danger";
+            else $type_btn = "primary";
+
+
 
             foreach ($query->result_array() as $key => $value) {
-                $html .= '<button type="button" class="btn btn-primary ok" value="'.$query->result_array()[0]['email'].'">' 
-                        .$query->result_array()[0]['nom']." ".$query->result_array()[0]['prenom'].
+                $html .= '<button type="button" class="btn btn-'.$type_btn.' ok" value="'.$this->user->getEmail().'">' 
+                        .$this->user->getNom()." ".$this->user->getPrenom().
                         '</button>';
             }
             echo $html;
@@ -140,7 +147,7 @@ class Site extends CI_Controller {
                 $real_heure_debut_obj = new DateTime($heure_debut);
                 $min = $real_heure_debut_obj->format('i');
 
-                if($min > 0)
+                if($min > 0 && explode(':', $heure_debut)[0] < 23)
                 {
                     $real_heure_debut_obj->modify("+ 1 hour");
                 }
@@ -151,7 +158,8 @@ class Site extends CI_Controller {
 
                 $real_date_obj = new DateTime();
                 $min = $real_date_obj->format('i');
-                if($min > 0)
+                echo "test".$heure_debut;
+                if($min > 0 && explode(':', $heure_debut)[0] < 23)
                 {
 
                     $real_date_obj->modify("+ 1 hour");
@@ -179,7 +187,7 @@ class Site extends CI_Controller {
             }
             else
             {
-                $res = $this->nextAvailableHour($data['data']);
+                $res = $this->_nextAvailableHour($data['data']);
 
 
                 if(!$res)
@@ -211,11 +219,9 @@ class Site extends CI_Controller {
         return $data;
     }
 
-    private function nextAvailableHour($res_array)
+    private function _nextAvailableHour($res_array)
     {
         $i = 1;
-
-        //var_dump($res_array);
 
         if(count($res_array) > 1)
         {
