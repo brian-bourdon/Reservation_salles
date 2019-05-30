@@ -81,23 +81,39 @@
 
         }
 
+        function addZero(i) {
+            if (i < 10) {
+                i = "0" + i;
+            }
+            return i;
+        }
+
         // ajax liste des salles
         $(".searchnum").blur(function () {
-
             recherche();
-
         }).blur();
 
         $(".searchnum").change(function () {
-
-          recherche();
+            recherche();
         });
 
         $(".searchnum").keyup(function () {
-
-         recherche();
-         
+            recherche();
         });
+
+        $("#date").change(function () {
+            var ok = new Date();
+            var now = addZero(ok.getFullYear()) + "-" + addZero(ok.getMonth() + 1) + "-" + addZero(ok.getDate());
+            var time = addZero(ok.getHours()) + ":" + addZero(ok.getMinutes());
+            if ($("#date").val() === now) {
+                $("#heure_debut").attr("min", time);
+                $("#heure_debut").val(time);
+            } else {
+                $("#heure_debut").attr("min", "00:00");
+                $("#heure_debut").val("00:00");
+            }
+        });
+
 
     });
 
