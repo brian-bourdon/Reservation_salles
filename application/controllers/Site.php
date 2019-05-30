@@ -147,7 +147,7 @@ class Site extends CI_Controller {
                 $real_heure_debut_obj = new DateTime($heure_debut);
                 $min = $real_heure_debut_obj->format('i');
 
-                if($min > 0)
+                if($min > 0 && explode(':', $heure_debut)[0] < 23)
                 {
                     $real_heure_debut_obj->modify("+ 1 hour");
                 }
@@ -158,7 +158,8 @@ class Site extends CI_Controller {
 
                 $real_date_obj = new DateTime();
                 $min = $real_date_obj->format('i');
-                if($min > 0)
+                echo "test".$heure_debut;
+                if($min > 0 && explode(':', $heure_debut)[0] < 23)
                 {
 
                     $real_date_obj->modify("+ 1 hour");
