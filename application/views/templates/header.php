@@ -7,9 +7,13 @@
         <meta content="" name="keywords">
         <meta content="" name="description">
 
-        <!-- Favicons -->
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-status-bar-style" content="black">
+        <meta name="apple-mobile-web-app-title" content="Weather PWA">
         <link href="<?php echo base_url('assets/img/favicon.png'); ?>" rel="icon">
         <link href="<?php echo base_url('assets/img/apple-touch-icon.png'); ?>" rel="apple-touch-icon">
+        <link rel="<?php echo base_url('assets/img/apple-touch-icon.png'); ?>">
+        <link rel="manifest" href="<?php echo base_url('assets/js/manifest.json'); ?>">
 
         <!-- Google Fonts -->
         <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,700,700i|Montserrat:300,400,500,700" rel="stylesheet">
