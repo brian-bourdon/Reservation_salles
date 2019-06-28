@@ -39,6 +39,8 @@ class Site extends CI_Controller {
         // TODO: Modif à faire en fonctions que ce soit un prof, etudiant ou admin
         if (isset($_SESSION["logged_in"]) && $_SESSION["logged_in"]) {
             $data['contents'] = 'accueil';
+            $data['mes_rdv'] = $this->Rendez_vous_model->get_rdv_by_id($_SESSION['idUser'])->result_array();
+            //var_dump($data);
         } else {
             $data['contents'] = 'index';
         }

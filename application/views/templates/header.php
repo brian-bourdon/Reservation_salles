@@ -168,16 +168,24 @@
                                     </tr>
                                 </thead>
                                 <tbody>
+                                    <?php
+                                    foreach($mes_rdv as $key => $value)
+                                    {
+                                        echo "<tr>";
+                                        echo "<th scope='row'>".$value['titre']."</th>";
+                                            echo "<td>@Kyriel, @Brian @Kev</td>";
+                                            echo "<td>".$value['Date']."</td>";
+                                            echo "<td>".$value['HeureDebut']."</td>";
+                                            echo "<td>";
+                                                echo "<button class='btn btn-danger'> <i class='fa fa-stop'></i> Annuler </button>";
+                                                
+                                            echo "</td>";
+                                        echo "</tr>";
 
-                                    <tr>
-                                        <th scope="row">A2</th>
-                                        <td>@Kyriel, @Brian @Kev</td>
-                                        <td>12/05/2019</td>
-                                        <td>09:20</td>
-                                        <td>
-                                            <button class='btn btn-danger'> <i class='fa fa-stop'></i> Annuler </button>
-                                        </td>
-                                    </tr>
+                                    }
+
+
+                                    ?>
 
                                 </tbody>
                             </table>
