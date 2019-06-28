@@ -109,4 +109,20 @@ class Etudiant extends CI_Controller {
 		redirect('Site/accueil');
 	}
 
+	public function getSallesById($id)
+	{
+		$data = array(
+					'prenom'  => $prenom,
+					'nom'     => $nom,
+					'email'	  => $email,
+					'pwd'  => $pwd,
+					'statut'  => 'etudiant'
+		);
+		
+		$test = $this->User_model->insert_user($this->user);
+		
+		redirect('');	
+	}
+
+
 }

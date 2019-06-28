@@ -173,12 +173,20 @@
                                     {
                                         echo "<tr>";
                                         echo "<th scope='row'>".$value['titre']."</th>";
-                                            echo "<td>@Kyriel, @Brian @Kev</td>";
+                                            echo "<td>";
+                                            $interlocuteurs = $this->Rendez_vous_model->get_interlocuteur_rdv($value['idDemandeur'], $value['Date'], $value['HeureDebut'], $value['idSalle']);
+                                            //var_dump($interlocuteurs);
+                                            foreach($interlocuteurs->result_array() as $key2 => $value2)
+                                            {
+                                                $user = $this->User_model->get_user_by_id($value2['idInterlocuteur'])->result();
+                                                echo '@'.$user[0]->prenom.$user[0]->nom;
+                                            }
+                                            echo"</td>";
                                             echo "<td>".$value['Date']."</td>";
                                             echo "<td>".$value['HeureDebut']."</td>";
                                             echo "<td>";
                                                 echo "<button class='btn btn-danger'> <i class='fa fa-stop'></i> Annuler </button>";
-                                                
+
                                             echo "</td>";
                                         echo "</tr>";
 
