@@ -46,9 +46,11 @@ class Rendez_vous_model extends CI_Model
         return $this->db->select('*')
                         ->from($this->table)
                         ->where('idInterlocuteur', $id)
+                        ->or_where('IdDemandeur', $id)
                         ->get();
 
     }
+
 
 }
 
