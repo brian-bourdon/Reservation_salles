@@ -42,6 +42,7 @@ class Rendez_vous_model extends CI_Model
         $this->db->where('Date', $date);
         //$this->db->where('HeureDebut <=', $heure_debut);
         $this->db->where('HeureFin >', $heure_debut);
+				$this->db->where('statut', 'accepted');
         $this->db->order_by('HeureFin ASC');
 
         return $this->db->get();
