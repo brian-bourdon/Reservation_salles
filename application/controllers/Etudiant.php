@@ -130,14 +130,14 @@ class Etudiant extends CI_Controller {
 	{
 		if(isset($_GET['id']) && !empty($_GET['id'])) $this->Notification_model->delete_by_id($_GET['id']); // Supprime notif
 		if(isset($_GET['idRdv']) && !empty($_GET['idRdv'])) $this->Notification_model->update_rdv_after_notif($_GET['idRdv'], "accepted"); // Maj rdv
-		redirect('accueil');
+		redirect(base_url('Site/accueil'));
 	}
 
 	public function notif_refused()
 	{
 		if(isset($_GET['id']) && !empty($_GET['id'])) $this->Notification_model->delete_by_id($_GET['id']); // Supprime notif
 		if(isset($_GET['idRdv']) && !empty($_GET['idRdv'])) $this->Notification_model->update_rdv_after_notif($_GET['idRdv'], "refused"); // Maj rdv
-		redirect('accueil');
+		redirect(base_url('Site/accueil'));
 	}
 
 
