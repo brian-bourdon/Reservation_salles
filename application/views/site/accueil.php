@@ -17,7 +17,7 @@
             </div>';
                 ?>
 
-                <h3>Welcome <?= $_SESSION['prenom'] . " " . $_SESSION['nom'] ?></h3>
+                <h3>Bonjour <?= $_SESSION['prenom'] . " " . $_SESSION['nom'] ?></h3>
                 <br>
             </header>
 

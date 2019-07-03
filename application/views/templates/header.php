@@ -112,27 +112,35 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <th scope="row">A1</th>
-                                    <td>@Kyriel, @Brain @Kev</td>
-                                    <td>12/05/2019</td>
-                                    <td>12:00</td>
-                                    <td>
-                                        <button class='btn btn-success'> <i class='fa fa-play'></i> oui </button>
-                                        <button class='btn btn-danger'> <i class='fa fa-stop'></i> non </button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">A2</th>
-                                    <td>@Kyriel, @Brain @Kev</td>
-                                    <td>12/05/2019</td>
-                                    <td>09:20</td>
-                                    <td>
-                                        <button class='btn btn-success'> <i class='fa fa-play'></i> oui </button>
-                                        <button class='btn btn-danger'> <i class='fa fa-stop'></i> non </button>
-                                    </td>
-                                </tr>
-
+                                <?php
+                                    foreach ($notif as $key => $value) {
+                                        $rdv_query = $this->Rendez_vous_model->get_rdv_by_id($value['idRdv']);
+                                        if($rdv_query->num_rows() == 1)
+                                        {
+                                            $rdv = $rdv_query->result_array()[0];
+                                            if($rdv['statut'] == "waiting")
+                                            {
+                                                $interlocuteurs = $this->Rendez_vous_model->get_interlocuteur_rdv($rdv['idDemandeur'], $rdv['Date'], $rdv['HeureDebut'], $rdv['idSalle']);
+                                                echo "<tr>";
+                                                    echo "<th scope='row'>".$rdv['titre']."</th>";
+                                                    echo "<td>";
+                                                    foreach($interlocuteurs->result_array() as $key2 => $value2)
+                                                    {
+                                                        $user = $this->User_model->get_user_by_id($value2['idInterlocuteur'])->result();
+                                                        echo '@'.$user[0]->prenom.$user[0]->nom;
+                                                    }
+                                                    echo "</td>";
+                                                    echo "<td>".$rdv['Date']."</td>";
+                                                    echo "<td>".$rdv['HeureDebut']."</td>";
+                                                    echo "<td>";
+                                                        echo "<button onclick=\"window.location.href='".base_url('Etudiant/notif_accepted')."?id=".$value['idNotif']."&idRdv=".$value['idRdv']."'\" class='btn btn-success'> <i class='fa fa-play'></i> oui </button>";
+                                                        echo "<button onclick=\"window.location.href='".base_url('Etudiant/notif_refused')."?id=".$value['idNotif']."&idRdv=".$value['idRdv']."'\" class='btn btn-danger' > <i class='fa fa-stop'></i> non </button>";
+                                                    echo "</td>";
+                                                echo "</tr>";
+                                            }
+                                        }
+                                    }
+                                ?>
                             </tbody>
                         </table>    
                     </div>
@@ -171,8 +179,9 @@
                                     <?php
                                     foreach($mes_rdv as $key => $value)
                                     {
+                                        $titre_salle = $this->Salle_model->getSalleByIdSalles($value['idSalle'])->result()[0];
                                         echo "<tr>";
-                                        echo "<th scope='row'>".$value['titre']."</th>";
+                                        echo "<th scope='row'>".$titre_salle->titre."</th>";
                                             echo "<td>";
                                             $interlocuteurs = $this->Rendez_vous_model->get_interlocuteur_rdv($value['idDemandeur'], $value['Date'], $value['HeureDebut'], $value['idSalle']);
                                             //var_dump($interlocuteurs);

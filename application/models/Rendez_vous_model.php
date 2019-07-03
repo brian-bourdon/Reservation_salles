@@ -3,7 +3,13 @@ class Rendez_vous_model extends CI_Model
 {
 	private $table = 'rendez_vous';
 
-	
+	public function get_rdv_by_id($idRdv)
+    {
+          return $this->db->select('*')
+                        ->from($this->table)
+                        ->where('idRdv', $idRdv)
+                        ->get();
+    }
 	public function insert_rdv($data)
 	{
 		return $this->db->insert($this->table, $data);
@@ -41,13 +47,15 @@ class Rendez_vous_model extends CI_Model
         return $this->db->get();
     }
 
-    public function get_rdv_by_id($id)
+    public function get_rdv_for_user($id)
     {
-        return $this->db->select('*')
-                        ->from($this->table)
-                        ->where('idInterlocuteur', $id)
-                        ->get();
+        $where = "statut='accepted' AND (idInterlocuteur='$id' OR idDemandeur='$id')";
 
+        return $this->db->select('idDemandeur, Date, HeureDebut, idSalle')
+                        ->distinct()
+                        ->from($this->table)
+                        ->where($where)
+                        ->get();
     }
 
     public function get_interlocuteur_rdv($idDemandeur, $Date, $HeureDebut, $idSalle)

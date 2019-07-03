@@ -19,6 +19,16 @@ class Salle_model extends CI_Model {
                         ->get();
   }
 
+  public function getSalleByIdSalles($id_salle)
+  {
+      return $this->db->select('*')
+                        ->from($this->table)
+                        ->where('idSalle', $id_salle)
+                        ->get();
+  }
+
+
+
 }
 
 ?>

@@ -10,6 +10,7 @@ class Etudiant extends CI_Controller {
 		$this->load->model('User_model');
 		$this->load->model('Rendez_vous_model');
 		$this->load->model('Salle_model');
+		$this->load->model('Notification_model');
 		//$this->load->library('User');
 	}
 	
@@ -38,7 +39,6 @@ class Etudiant extends CI_Controller {
 		redirect('');
 		
 	}
-	
 	// Mettre dans user
 	public function demande_rdv()
 	{
@@ -92,8 +92,10 @@ class Etudiant extends CI_Controller {
 			$info['statut'] = true;
 			if($this->Rendez_vous_model->insert_rdv($data)) 
 			{
-				$info['msg'] = "Votre rendez-vous a bien été crée";
+				$info['msg'] = "Votre rendez-vous a bien été crée.</br>Les éleves/professeurs concernés ont reçus une notification.";
 				$info['statut'] &= true;
+				$idRdv = $this->db->insert_id();
+				$this->Notification_model->insertNotif($idRdv, $this->user->getIdUser()); //Envoi notif
 			}
 			else 
 			{
@@ -123,6 +125,21 @@ class Etudiant extends CI_Controller {
 		
 		redirect('');	
 	}
+
+	public function notif_accepted()
+	{
+		if(isset($_GET['id']) && !empty($_GET['id'])) $this->Notification_model->delete_by_id($_GET['id']); // Supprime notif
+		if(isset($_GET['idRdv']) && !empty($_GET['idRdv'])) $this->Notification_model->update_rdv_after_notif($_GET['idRdv'], "accepted"); // Maj rdv
+		redirect('accueil');
+	}
+
+	public function notif_refused()
+	{
+		if(isset($_GET['id']) && !empty($_GET['id'])) $this->Notification_model->delete_by_id($_GET['id']); // Supprime notif
+		if(isset($_GET['idRdv']) && !empty($_GET['idRdv'])) $this->Notification_model->update_rdv_after_notif($_GET['idRdv'], "refused"); // Maj rdv
+		redirect('accueil');
+	}
+
 
 
 }

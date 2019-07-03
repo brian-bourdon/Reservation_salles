@@ -26,6 +26,7 @@ class Site extends CI_Controller {
         $this->load->model('User_model');
         $this->load->model('Rendez_vous_model');
         $this->load->model('Salle_model');
+        $this->load->model('Notification_model');
         //$this->load->library('User');
     }
 
@@ -39,7 +40,8 @@ class Site extends CI_Controller {
         // TODO: Modif à faire en fonctions que ce soit un prof, etudiant ou admin
         if (isset($_SESSION["logged_in"]) && $_SESSION["logged_in"]) {
             $data['contents'] = 'accueil';
-            $data['mes_rdv'] = $this->Rendez_vous_model->get_rdv_by_id($_SESSION['idUser'])->result_array();
+            $data['mes_rdv'] = $this->Rendez_vous_model->get_rdv_for_user($_SESSION['idUser'])->result_array();
+            $data['notif'] = $this->Notification_model->get_notif_by_user($_SESSION['idUser'])->result_array();
             //var_dump($data);
         } else {
             $data['contents'] = 'index';
@@ -102,7 +104,7 @@ class Site extends CI_Controller {
         $html = "";
         $query = $this->User_model->get_users($search);
 
-        if ($query->num_rows() > 0 && !empty($search) && strlen($search) > 2) {
+        if ($query->num_rows() > 0 && !empty($search) && strlen($search) > 1) {
             $this->load->library('User', $query->result_array()[0]);
             
             if($this->user->getStatut() == "etudiant") $type_btn = "primary";
@@ -110,12 +112,13 @@ class Site extends CI_Controller {
             else if($this->user->getStatut() == "admin") $type_btn = "danger";
             else $type_btn = "primary";
 
-
-
             foreach ($query->result_array() as $key => $value) {
-                $html .= '<button type="button" class="btn btn-'.$type_btn.' ok" value="'.$this->user->getEmail().'">' 
-                        .$this->user->getNom()." ".$this->user->getPrenom().
-                        '</button>';
+                if($this->user->getIdUser() != $_SESSION['idUser'])
+                {
+                    $html .= '<button type="button" class="btn btn-'.$type_btn.' ok" value="'.$this->user->getEmail().'">' 
+                            .$this->user->getNom()." ".$this->user->getPrenom().
+                            '</button>';
+                }
             }
             echo $html;
         }
