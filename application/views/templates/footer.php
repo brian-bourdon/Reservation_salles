@@ -77,9 +77,59 @@
                     $(html).appendTo('#vue_salles');
                 }
             });
+        }
 
+        function reload_notif() {
+            $.ajax({
+                url: "<?= base_url("Site/reload_notif") ?>",
+                type: 'GET',
+                dataType: 'html',
+                success: function (html) {
+                    $('.notifs').remove();
+                    $(html).appendTo('#notif_body');
+                }
+            });
+        }
+        function accepted_notif() {
+            idNotif = $('#idNotif').val();
+            idRdv = $('#idRdv').val();
+            $.ajax({
+                url: "<?= base_url("Etudiant/notif_accepted") ?>?id=" + idNotif + "&idRdv=" + idRdv,
+                type: 'GET',
+                dataType: 'html',
+                success: function (html) {
+                    reload_notif();
+                    $('#myMod').modal('toggle'); 
+                    $(html).appendTo('.section-header');
+                }
+            });
 
         }
+
+        function refused_notif() {
+            idNotif = $('#idNotif').val();
+            idRdv = $('#idRdv').val();
+            $.ajax({
+                url: "<?= base_url("Etudiant/notif_refused") ?>?id=" + idNotif + "&idRdv=" + idRdv,
+                type: 'GET',
+                dataType: 'html',
+                success: function (html) {
+                    reload_notif();
+                    $('#myMod').modal('toggle'); 
+                    $(html).appendTo('.section-header');
+                }
+            });
+        }
+
+        $(document).on('click','#accepted_notif',function () {
+            accepted_notif();
+        });
+        $(document).on('click','#refused_notif',function () {
+            refused_notif();
+        });
+        $( document ).ready(function() {
+            reload_notif();
+        });
 
         function addZero(i) {
             if (i < 10) {

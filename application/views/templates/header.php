@@ -38,6 +38,7 @@
           Author: BootstrapMade.com
           License: https://bootstrapmade.com/license/
         ======================================================= -->
+
     </head>
 
     <body>
@@ -69,7 +70,7 @@
                             <li class="menu-active"><a href="<?php echo base_url('Site/accueil'); ?>" >Accueil</a></li>
                             <li class="menu-has-children"  data-toggle="modal" data-target="#myMod">
                                 <a href="#">Notifications 
-                                    <span class='badge-success circle' style="padding:3px;"> <?php echo $nb_notif;?> </span>
+                                    <span class='badge-success circle' style="padding:3px;"> <?php if(isset($_SESSION["logged_in"]) && $_SESSION["logged_in"] && isset($nb_notif)) echo $nb_notif;?> </span>
                                 </a>
                             </li>
                             <li class="menu-has-children"><a href=""> <?= $_SESSION['nom'] . " " . $_SESSION['prenom'] ?></a>
@@ -111,36 +112,8 @@
                                     <th scope="col" class="">Rejoindre le groupe </th>
                                 </tr>
                             </thead>
-                            <tbody>
-                                <?php
-                                    foreach ($notif as $key => $value) {
-                                        $rdv_query = $this->Rendez_vous_model->get_rdv_by_id($value['idRdv']);
-                                        if($rdv_query->num_rows() == 1)
-                                        {
-                                            $rdv = $rdv_query->result_array()[0];
-                                            if($rdv['statut'] == "waiting")
-                                            {
-                                                $interlocuteurs = $this->Rendez_vous_model->get_interlocuteur_rdv($rdv['idDemandeur'], $rdv['Date'], $rdv['HeureDebut'], $rdv['idSalle']);
-                                                echo "<tr>";
-                                                    echo "<th scope='row'>".$rdv['titre']."</th>";
-                                                    echo "<td>";
-                                                    foreach($interlocuteurs->result_array() as $key2 => $value2)
-                                                    {
-                                                        $user = $this->User_model->get_user_by_id($value2['idInterlocuteur'])->result();
-                                                        echo '@'.$user[0]->prenom.$user[0]->nom;
-                                                    }
-                                                    echo "</td>";
-                                                    echo "<td>".$rdv['Date']."</td>";
-                                                    echo "<td>".$rdv['HeureDebut']."</td>";
-                                                    echo "<td>";
-                                                        echo "<button onclick=\"window.location.href='".base_url('Etudiant/notif_accepted')."?id=".$value['idNotif']."&idRdv=".$value['idRdv']."'\" class='btn btn-success'> <i class='fa fa-play'></i> oui </button>";
-                                                        echo "<button onclick=\"window.location.href='".base_url('Etudiant/notif_refused')."?id=".$value['idNotif']."&idRdv=".$value['idRdv']."'\" class='btn btn-danger' > <i class='fa fa-stop'></i> non </button>";
-                                                    echo "</td>";
-                                                echo "</tr>";
-                                            }
-                                        }
-                                    }
-                                ?>
+                            <tbody id="notif_body">
+
                             </tbody>
                         </table>    
                     </div>
@@ -161,7 +134,7 @@
                 <!-- Modal content-->
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h4 class="modal-title">Mes rendez-vous</h4>
+                        <h4 class="modal-title">Mes réservations</h4>
                     </div>
                     <div class="modal-body">
                         <div>
@@ -169,10 +142,11 @@
                                 <thead>
                                     <tr>
                                         <th scope="col">Numéro de salle</th>
+                                        <th scope="col">Créateur du groupe</th>
                                         <th scope="col">Membres du groupe</th>
                                         <th scope="col">Date</th>
                                         <th scope="col">Heure de début</th>
-                                        <th scope="col" class="">Rejoindre le groupe </th>
+                                        <th scope="col" class="">Action </th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -180,15 +154,17 @@
                                     foreach($mes_rdv as $key => $value)
                                     {
                                         $titre_salle = $this->Salle_model->getSalleByIdSalles($value['idSalle'])->result()[0];
+                                        $demandeur = $this->User_model->get_user_by_id($value['idDemandeur'])->result_array()[0];
                                         echo "<tr>";
                                         echo "<th scope='row'>".$titre_salle->titre."</th>";
+                                        echo "<td><a href='#'>@".$demandeur['nom'].$demandeur['prenom']."</a></td>";
                                             echo "<td>";
                                             $interlocuteurs = $this->Rendez_vous_model->get_interlocuteur_rdv($value['idDemandeur'], $value['Date'], $value['HeureDebut'], $value['idSalle']);
-                                            //var_dump($interlocuteurs);
+
                                             foreach($interlocuteurs->result_array() as $key2 => $value2)
                                             {
                                                 $user = $this->User_model->get_user_by_id($value2['idInterlocuteur'])->result();
-                                                echo '@'.$user[0]->prenom.$user[0]->nom;
+                                                echo '<a href="#"">@'.$user[0]->prenom.$user[0]->nom."</a>";
                                             }
                                             echo"</td>";
                                             echo "<td>".$value['Date']."</td>";

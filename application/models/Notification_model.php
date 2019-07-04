@@ -26,7 +26,7 @@ class Notification_model extends CI_Model
 	public function delete_by_id($id)
 	{
 		$this->db->where('idNotif', $id);
-		$this->db->delete($this->table);
+		return $this->db->delete($this->table);
 	}
 
 	public function update_rdv_after_notif($idRdv, $value)
@@ -35,7 +35,7 @@ class Notification_model extends CI_Model
         	'statut' => $value,
 		);
 		$this->db->where('idRdv', $idRdv);
-		$this->db->update("rendez_vous", $data);
+		return $this->db->update("rendez_vous", $data);
 	}
 }
 

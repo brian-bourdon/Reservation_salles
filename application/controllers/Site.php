@@ -31,6 +31,10 @@ class Site extends CI_Controller {
     }
 
     public function index() {
+        if (isset($_SESSION["logged_in"]) && $_SESSION["logged_in"])
+        {
+            $this->accueil();
+        }
         $data['contents'] = 'index';
         $data['controller'] = "site";
         $this->load->view('templates/template_etudiant', $data);
@@ -49,6 +53,43 @@ class Site extends CI_Controller {
         }
         $data['controller'] = "site";
         $this->load->view('templates/template_etudiant', $data);
+    }
+
+    public function reload_notif()
+    {
+        $notif = $this->Notification_model->get_notif_by_user($_SESSION['idUser'])->result_array();
+        foreach ($notif as $key => $value) {
+            $rdv_query = $this->Rendez_vous_model->get_rdv_by_id($value['idRdv']);
+            if($rdv_query->num_rows() == 1)
+            {
+                $rdv = $rdv_query->result_array()[0];
+                if($rdv['statut'] == "waiting")
+                {
+                    $interlocuteurs = $this->Rendez_vous_model->get_interlocuteur_rdv($rdv['idDemandeur'], $rdv['Date'], $rdv['HeureDebut'], $rdv['idSalle']);
+                    echo "<tr class='notifs'>";
+                    echo "<th scope='row'>".$rdv['titre']."</th>";
+                    echo "<td>";
+                    foreach($interlocuteurs->result_array() as $key2 => $value2)
+                    {
+                        $user = $this->User_model->get_user_by_id($value2['idInterlocuteur'])->result();
+                        echo '<a href="#">@'.$user[0]->prenom.$user[0]->nom."</a>";
+                    }
+                    echo "</td>";
+                    echo "<td>".$rdv['Date']."</td>";
+                    echo "<td>".$rdv['HeureDebut']."</td>";
+                    echo "<td>";
+                    /*echo "<button id='accepted_notif' onclick=\"window.location.href='".base_url('Etudiant/notif_accepted')."?id=".$value['idNotif']."&idRdv=".$value['idRdv']."'\" class='btn btn-success'> <i class='fa fa-play'></i> oui </button>";
+                    echo "<button id='refused_notif' onclick=\"window.location.href='".base_url('Etudiant/notif_refused')."?id=".$value['idNotif']."&idRdv=".$value['idRdv']."'\" class='btn btn-danger' > <i class='fa fa-stop'></i> non </button>";*/
+                    echo "<button id='accepted_notif' class='btn btn-success' > <i class='fa fa-play'></i> oui </button>";
+                    echo "<button id='refused_notif' class='btn btn-danger' > <i class='fa fa-stop'></i> non </button>";
+                    echo "<input type='hidden' id='idNotif' value='".$value['idNotif']."'/>";
+                    echo "<input type='hidden' id='idRdv' value='".$value['idRdv']."'/>";
+
+                    echo "</td>";
+                    echo "</tr>";
+                }
+            }
+        }
     }
 
     public function connect() {

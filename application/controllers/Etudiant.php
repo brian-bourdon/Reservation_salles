@@ -128,16 +128,30 @@ class Etudiant extends CI_Controller {
 
 	public function notif_accepted()
 	{
-		if(isset($_GET['id']) && !empty($_GET['id'])) $this->Notification_model->delete_by_id($_GET['id']); // Supprime notif
-		if(isset($_GET['idRdv']) && !empty($_GET['idRdv'])) $this->Notification_model->update_rdv_after_notif($_GET['idRdv'], "accepted"); // Maj rdv
-		redirect(base_url('Site/accueil'));
+		$res = true;
+		if(isset($_GET['id']) && !empty($_GET['id'])) $res &= $this->Notification_model->delete_by_id($_GET['id']); // Supprime notif
+		if(isset($_GET['idRdv']) && !empty($_GET['idRdv'])) $res &= $this->Notification_model->update_rdv_after_notif($_GET['idRdv'], "accepted"); // Maj rdv
+		if($res)
+		{
+			echo '<div class="alert alert-success" role="alert">
+			  Vous avez bien rejoins le groupe
+			</div>';
+		}
+		//redirect(base_url('Site/accueil'));
 	}
 
 	public function notif_refused()
 	{
-		if(isset($_GET['id']) && !empty($_GET['id'])) $this->Notification_model->delete_by_id($_GET['id']); // Supprime notif
-		if(isset($_GET['idRdv']) && !empty($_GET['idRdv'])) $this->Notification_model->update_rdv_after_notif($_GET['idRdv'], "refused"); // Maj rdv
-		redirect(base_url('Site/accueil'));
+		$res = true;
+		if(isset($_GET['id']) && !empty($_GET['id'])) $res &= $this->Notification_model->delete_by_id($_GET['id']); // Supprime notif
+		if(isset($_GET['idRdv']) && !empty($_GET['idRdv'])) $res &= $this->Notification_model->update_rdv_after_notif($_GET['idRdv'], "refused"); // Maj rdv
+		if($res)
+		{
+			echo '<div class="alert alert-warning" role="alert">
+			  Vous avez bien quitté le groupe
+			</div>';
+		}
+		//redirect(base_url('Site/accueil'));
 	}
 
 
