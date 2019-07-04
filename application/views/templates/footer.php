@@ -78,6 +78,19 @@
                 }
             });
         }
+        
+        function reload_count_notif()
+        {
+            $.ajax({
+                url: "<?= base_url("Site/reload_count_notif") ?>",
+                type: 'GET',
+                dataType: 'html',
+                success: function (html) {
+                    $('#real_counter_notif').remove();
+                    $(html).appendTo('#counter_notif');
+                }
+            });
+        }
 
         function reload_notif() {
             $.ajax({
@@ -85,6 +98,7 @@
                 type: 'GET',
                 dataType: 'html',
                 success: function (html) {
+                    reload_count_notif();
                     $('.notifs').remove();
                     $(html).appendTo('#notif_body');
                 }
@@ -103,7 +117,6 @@
                     $(html).appendTo('.section-header');
                 }
             });
-
         }
 
         function refused_notif() {

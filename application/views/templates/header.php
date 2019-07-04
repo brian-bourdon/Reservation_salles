@@ -70,7 +70,9 @@
                             <li class="menu-active"><a href="<?php echo base_url('Site/accueil'); ?>" >Accueil</a></li>
                             <li class="menu-has-children"  data-toggle="modal" data-target="#myMod">
                                 <a href="#">Notifications 
-                                    <span class='badge-success circle' style="padding:3px;"> <?php if(isset($_SESSION["logged_in"]) && $_SESSION["logged_in"] && isset($nb_notif)) echo $nb_notif;?> </span>
+                                    <span id="counter_notif" class='badge-success circle' style="padding:3px;"> 
+
+                                    </span>
                                 </a>
                             </li>
                             <li class="menu-has-children"><a href=""> <?= $_SESSION['nom'] . " " . $_SESSION['prenom'] ?></a>

@@ -92,6 +92,11 @@ class Site extends CI_Controller {
         }
     }
 
+    public function reload_count_notif()
+    {
+        echo "<span id='real_counter_notif'>".$this->Notification_model->get_notif_by_user($_SESSION['idUser'])->num_rows()."</span>";
+    }
+
     public function connect() {
         $statut = $_POST['statut'];
         $mail = $_POST['mail'];

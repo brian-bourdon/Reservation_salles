@@ -133,8 +133,11 @@ class Etudiant extends CI_Controller {
 		if(isset($_GET['idRdv']) && !empty($_GET['idRdv'])) $res &= $this->Notification_model->update_rdv_after_notif($_GET['idRdv'], "accepted"); // Maj rdv
 		if($res)
 		{
-			echo '<div class="alert alert-success" role="alert">
+			echo '<div class="alert alert-success alert-dismissible fade show" role="alert">
 			  Vous avez bien rejoins le groupe
+			  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+			    <span aria-hidden="true">&times;</span>
+			  </button>
 			</div>';
 		}
 		//redirect(base_url('Site/accueil'));
@@ -147,8 +150,11 @@ class Etudiant extends CI_Controller {
 		if(isset($_GET['idRdv']) && !empty($_GET['idRdv'])) $res &= $this->Notification_model->update_rdv_after_notif($_GET['idRdv'], "refused"); // Maj rdv
 		if($res)
 		{
-			echo '<div class="alert alert-warning" role="alert">
+			echo '<div class="alert alert-warning alert-dismissible fade show" role="alert">
 			  Vous avez bien quitté le groupe
+			  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+			    <span aria-hidden="true">&times;</span>
+			  </button>
 			</div>';
 		}
 		//redirect(base_url('Site/accueil'));
