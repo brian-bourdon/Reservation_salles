@@ -41,7 +41,8 @@ class Site extends CI_Controller {
         if (isset($_SESSION["logged_in"]) && $_SESSION["logged_in"]) {
             $data['contents'] = 'accueil';
             $data['mes_rdv'] = $this->Rendez_vous_model->get_rdv_for_user($_SESSION['idUser'])->result_array();
-            $data['notif'] = $this->Notification_model->get_notif_by_user($_SESSION['idUser']);
+            $data['notif'] = $this->Notification_model->get_notif_by_user($_SESSION['idUser'])->result_array();
+            $data['nb_notif'] = $this->Notification_model->get_notif_by_user($_SESSION['idUser'])->num_rows();
             //var_dump($data);
         } else {
             $data['contents'] = 'index';

@@ -69,7 +69,7 @@
                             <li class="menu-active"><a href="<?php echo base_url('Site/accueil'); ?>" >Accueil</a></li>
                             <li class="menu-has-children"  data-toggle="modal" data-target="#myMod">
                                 <a href="#">Notifications 
-                                    <span class='badge-success circle' style="padding:3px;"> <?php echo $notif->num_rows();?> </span>
+                                    <span class='badge-success circle' style="padding:3px;"> <?php echo $nb_notif;?> </span>
                                 </a>
                             </li>
                             <li class="menu-has-children"><a href=""> <?= $_SESSION['nom'] . " " . $_SESSION['prenom'] ?></a>
@@ -113,7 +113,7 @@
                             </thead>
                             <tbody>
                                 <?php
-                                    foreach ($notif->result_array() as $key => $value) {
+                                    foreach ($notif as $key => $value) {
                                         $rdv_query = $this->Rendez_vous_model->get_rdv_by_id($value['idRdv']);
                                         if($rdv_query->num_rows() == 1)
                                         {
