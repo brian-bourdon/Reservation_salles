@@ -44,9 +44,6 @@ class Site extends CI_Controller {
         // TODO: Modif à faire en fonctions que ce soit un prof, etudiant ou admin
         if (isset($_SESSION["logged_in"]) && $_SESSION["logged_in"]) {
             $data['contents'] = 'accueil';
-            $data['mes_rdv'] = $this->Rendez_vous_model->get_rdv_for_user($_SESSION['idUser'])->result_array();
-            $data['notif'] = $this->Notification_model->get_notif_by_user($_SESSION['idUser'])->result_array();
-            $data['nb_notif'] = $this->Notification_model->get_notif_by_user($_SESSION['idUser'])->num_rows();
             //var_dump($data);
         } else {
             $data['contents'] = 'index';
@@ -89,6 +86,36 @@ class Site extends CI_Controller {
                     echo "</tr>";
                 }
             }
+        }
+    }
+
+    public function load_rdv()
+    {
+        $mes_rdv = $this->Rendez_vous_model->get_rdv_for_user($_SESSION['idUser'])->result_array();
+        foreach($mes_rdv as $key => $value)
+        {
+            $titre_salle = $this->Salle_model->getSalleByIdSalles($value['idSalle'])->result()[0];
+            $demandeur = $this->User_model->get_user_by_id($value['idDemandeur'])->result_array()[0];
+            echo "<tr class='rdv_value'>";
+            echo "<th scope='row'>".$titre_salle->titre."</th>";
+            echo "<td><a href='#'>@".$demandeur['nom'].$demandeur['prenom']."</a></td>";
+            echo "<td>";
+            $interlocuteurs = $this->Rendez_vous_model->get_interlocuteur_rdv($value['idDemandeur'], $value['Date'], $value['HeureDebut'], $value['idSalle']);
+
+            foreach($interlocuteurs->result_array() as $key2 => $value2)
+            {
+                $user = $this->User_model->get_user_by_id($value2['idInterlocuteur'])->result();
+                echo '<a href="#"">@'.$user[0]->prenom.$user[0]->nom."</a>";
+            }
+            echo"</td>";
+            echo "<td>".$value['Date']."</td>";
+            echo "<td>".$value['HeureDebut']."</td>";
+            echo "<td>";
+            echo "<button class='btn btn-danger'> <i class='fa fa-stop'></i> Annuler </button>";
+
+            echo "</td>";
+            echo "</tr>";
+
         }
     }
 

@@ -1,11 +1,7 @@
 <main id="main">
-
-    <!--==========================
-      About Us Section
-    ============================-->
     <section id="about">
         <div class="container">
-            <header class="section-header"> 
+            <header class="section-header" id="top"> 
                 <br> <br>
                 <?php
                 if (!empty($this->session->flashdata('create_rdv')))
@@ -16,8 +12,7 @@
             </button>
             </div>';
                 ?>
-
-                <h3>Bonjour <?= $_SESSION['prenom'] . " " . $_SESSION['nom'] ?></h3>
+                <h3><?= $_SESSION['prenom'] . " " . $_SESSION['nom']." (".$_SESSION['statut'].")" ?></h3>
                 <br>
             </header>
 
@@ -83,7 +78,7 @@
     <!--==========================
       Team Section
     ============================-->
-    <section id="team">
+    <!--<section id="team">
         <div class="container">
             <div class="section-header wow fadeInUp">
                 <h3>Team</h3>
@@ -94,7 +89,7 @@
 
                 <div class="col-lg-3 col-md-6 wow fadeInUp">
                     <div class="member">
-                        <img src="<?php echo base_url('assets/img/team-1.jpg'); ?>" class="img-fluid" alt="">
+                        <img src="<?php //echo base_url('assets/img/team-1.jpg'); ?>" class="img-fluid" alt="">
                         <div class="member-info">
                             <div class="member-info-content">
                                 <h4>Walter White</h4>
@@ -112,7 +107,7 @@
 
                 <div class="col-lg-3 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
                     <div class="member">
-                        <img src="<?php echo base_url('assets/img/team-2.jpg'); ?>" class="img-fluid" alt="">
+                        <img src="<?php //echo base_url('assets/img/team-2.jpg'); ?>" class="img-fluid" alt="">
                         <div class="member-info">
                             <div class="member-info-content">
                                 <h4>Sarah Jhonson</h4>
@@ -130,7 +125,7 @@
 
                 <div class="col-lg-3 col-md-6 wow fadeInUp" data-wow-delay="0.2s">
                     <div class="member">
-                        <img src="<?php echo base_url('assets/img/team-3.jpg'); ?>" class="img-fluid" alt="">
+                        <img src="<?php //echo base_url('assets/img/team-3.jpg'); ?>" class="img-fluid" alt="">
                         <div class="member-info">
                             <div class="member-info-content">
                                 <h4>William Anderson</h4>
@@ -148,7 +143,7 @@
 
                 <div class="col-lg-3 col-md-6 wow fadeInUp" data-wow-delay="0.3s">
                     <div class="member">
-                        <img src="<?php echo base_url('assets/img/team-4.jpg'); ?>" class="img-fluid" alt="">
+                        <img src="<?php //echo base_url('assets/img/team-4.jpg'); ?>" class="img-fluid" alt="">
                         <div class="member-info">
                             <div class="member-info-content">
                                 <h4>Amanda Jepson</h4>
@@ -167,7 +162,7 @@
             </div>
 
         </div>
-    </section><!-- #team -->
+    </section>--><!-- #team -->
 
     <!--==========================
      Listes des salles

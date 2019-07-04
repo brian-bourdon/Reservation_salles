@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
     <head>
         <meta charset="utf-8">
         <title>Projet Annuel</title>
@@ -151,36 +151,7 @@
                                         <th scope="col" class="">Action </th>
                                     </tr>
                                 </thead>
-                                <tbody>
-                                    <?php
-                                    foreach($mes_rdv as $key => $value)
-                                    {
-                                        $titre_salle = $this->Salle_model->getSalleByIdSalles($value['idSalle'])->result()[0];
-                                        $demandeur = $this->User_model->get_user_by_id($value['idDemandeur'])->result_array()[0];
-                                        echo "<tr>";
-                                        echo "<th scope='row'>".$titre_salle->titre."</th>";
-                                        echo "<td><a href='#'>@".$demandeur['nom'].$demandeur['prenom']."</a></td>";
-                                            echo "<td>";
-                                            $interlocuteurs = $this->Rendez_vous_model->get_interlocuteur_rdv($value['idDemandeur'], $value['Date'], $value['HeureDebut'], $value['idSalle']);
-
-                                            foreach($interlocuteurs->result_array() as $key2 => $value2)
-                                            {
-                                                $user = $this->User_model->get_user_by_id($value2['idInterlocuteur'])->result();
-                                                echo '<a href="#"">@'.$user[0]->prenom.$user[0]->nom."</a>";
-                                            }
-                                            echo"</td>";
-                                            echo "<td>".$value['Date']."</td>";
-                                            echo "<td>".$value['HeureDebut']."</td>";
-                                            echo "<td>";
-                                                echo "<button class='btn btn-danger'> <i class='fa fa-stop'></i> Annuler </button>";
-
-                                            echo "</td>";
-                                        echo "</tr>";
-
-                                    }
-
-
-                                    ?>
+                                <tbody id="rdv_body">
 
                                 </tbody>
                             </table>
