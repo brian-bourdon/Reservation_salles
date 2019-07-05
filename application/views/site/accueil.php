@@ -210,7 +210,10 @@
                                 <input class="form-control searchUser" type="text" id="nom_prof" name="nom_prof" value="" placeholder="Nom du professeur et/ou nom des membres de votre groupe" required=""/><br>
                                 <input class="form-control searchUser" type="hidden" id="idProf" name="idProf" value=""/>
                                 <div id="result"></div>
+                                </br>
+                                <div id="allow_group">
 
+                                </div>
                                 <div id="membre" class="form-check form-check-inline">
                                     
                                 </div><br>

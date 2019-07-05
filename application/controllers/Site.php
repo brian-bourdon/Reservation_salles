@@ -33,7 +33,7 @@ class Site extends CI_Controller {
     public function index() {
         if (isset($_SESSION["logged_in"]) && $_SESSION["logged_in"])
         {
-            $this->accueil();
+            redirect('Site/accueil');
         }
         $data['contents'] = 'index';
         $data['controller'] = "site";
@@ -237,7 +237,7 @@ class Site extends CI_Controller {
 
                 $real_date_obj = new DateTime();
                 $min = $real_date_obj->format('i');
-                echo "test".$heure_debut;
+                //echo "test".$heure_debut;
                 if($min > 0 && explode(':', $heure_debut)[0] < 23)
                 {
 
@@ -266,6 +266,7 @@ class Site extends CI_Controller {
             }
             else
             {
+                //echo "test";
                 $res = $this->_nextAvailableHour($data['data']);
 
 
@@ -298,6 +299,7 @@ class Site extends CI_Controller {
         return $data;
     }
 
+
     private function _nextAvailableHour($res_array)
     {
         $i = 1;
@@ -316,6 +318,41 @@ class Site extends CI_Controller {
             if($res_array[$i-1]['HeureFin'] <= '23:00:00') return $res_array[0]['HeureFin'];
             else return false;
         }
+    }
+
+    public function load_allow_groups()
+    {
+        $num_salles = $this->Salle_model->getSalleByNumSalles($_GET['num_salles'])->result_array()[0]['idSalle'];
+        $date = new DateTime($_GET['date']);
+        $real_date = $date->format('Y-m-d');
+        $heure_debut = $_GET['heure_debut'];
+
+        if($this->Rendez_vous_model->isSalleTotallyAvailable($num_salles, $real_date, $heure_debut)->num_rows() == 0)
+        {
+            $etat = "";
+            $statut = "";
+        }
+        elseif($this->Rendez_vous_model->isSalleTotallyAvailable($num_salles, $real_date, $heure_debut)->num_rows() == 1)
+        {
+            $etat = "disabled";
+            if($this->Rendez_vous_model->isSalleTotallyAvailable($num_salles, $real_date, $heure_debut)->result_array()[0]['AllowGroups'])
+            {
+                $statut = "checked";
+                echo '<input type="hidden" name="value_check_allow_group" value="true" />';
+            }
+            else 
+            {
+                $statut = "";
+                echo '<input type="hidden" name="value_check_allow_group" value="false" />';
+            }
+        }
+
+        echo '<div class="form-check" id="allow_checked_group">';
+        echo '<input class="form-check-input" type="checkbox" value="true" id="allow_other_group" name="allow_other_group"'.$statut.' '.$etat.'>';
+        echo '<label class="form-check-label" for="allow_other_group">';
+        echo 'Autoriser d\'autres groupes à travailler dans la même salle';
+        echo '</label>';
+        echo '</div>';
     }
 
 

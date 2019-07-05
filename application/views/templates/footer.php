@@ -96,10 +96,10 @@
                         type: 'GET',
                         dataType: 'html',
                         success: function (html) {
-                            reload_count_notif();
                             load_rdv();
                             $('.notifs').remove();
                             $(html).appendTo('#notif_body');
+                            reload_count_notif();
                         }
                     });
                 }
@@ -126,6 +126,7 @@
                         dataType: 'html',
                         success: function (html) {
                             reload_notif();
+                            recherche();
                             $('#myMod').modal('toggle'); 
                             $(html).appendTo('#top');
                         }
@@ -141,12 +142,31 @@
                         dataType: 'html',
                         success: function (html) {
                             reload_notif();
+                            recherche();
                             $('#myMod').modal('toggle'); 
                             $(html).appendTo('#top');
                         }
                     });
                 }
 
+                function load_allow_group() {
+                    var num_salles = $("#titresalle").val();
+                    var date = $("#datesalle").val();
+                    var heure_debut = $("#heure_debut1").val();
+
+                    $.ajax({
+                        url: "<?= base_url("Site/load_allow_groups") ?>?num_salles=" + num_salles + "&date=" + date + "&heure_debut=" + heure_debut,
+                        type: 'GET',
+                        dataType: 'html',
+                        success: function (html) {
+                            $('#allow_checked_group').remove();
+                            $(html).appendTo('#allow_group');
+                        }
+                    });
+                }
+                $(document).on('click','.demande_rdv',function () {
+                    load_allow_group();
+                });
                 $(document).on('click','#accepted_notif',function () {
                     accepted_notif();
                 });

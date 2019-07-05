@@ -46,6 +46,12 @@ class Etudiant extends CI_Controller {
 		$tab_verif_mail = array();
 		$now = new DateTime('now');
 		$date = new DateTime($_POST['date']);
+		if(isset($_POST['value_check_allow_group'])) $allow_other_group = $_POST['value_check_allow_group'];
+		else
+		{
+			if(isset($_POST['allow_other_group']) && $_POST['allow_other_group']) $allow_other_group = $_POST['allow_other_group'];
+			else $allow_other_group = "false";
+		}
 
 		$salle = $this->Salle_model->getSalleByNumSalles($_POST['salle']);
 		$idSalle = "";
@@ -84,7 +90,8 @@ class Etudiant extends CI_Controller {
 					'HeureDebut'     => $_POST['heure_debut'],
 					'HeureFin'		=> $heure_fin,
 					'titre'	  => $_POST['salle'],
-					'idSalle' => $idSalle
+					'idSalle' => $idSalle,
+					'AllowGroups' => $allow_other_group
 			);
 
 			//TODO: Verif salle
