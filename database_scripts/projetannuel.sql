@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : 127.0.0.1:3306
--- Généré le :  mer. 03 juil. 2019 à 16:03
+-- Généré le :  ven. 05 juil. 2019 à 15:34
 -- Version du serveur :  5.7.24
 -- Version de PHP :  7.2.14
 
@@ -34,14 +34,7 @@ CREATE TABLE IF NOT EXISTS `notification` (
   `idRdv` int(11) NOT NULL,
   `idUser` int(11) NOT NULL,
   PRIMARY KEY (`idNotif`)
-) ENGINE=MyISAM AUTO_INCREMENT=15 DEFAULT CHARSET=utf8;
-
---
--- Déchargement des données de la table `notification`
---
-
-INSERT INTO `notification` (`idNotif`, `idRdv`, `idUser`) VALUES
-(11, 150, 19);
+) ENGINE=MyISAM AUTO_INCREMENT=73 DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -60,17 +53,16 @@ CREATE TABLE IF NOT EXISTS `rendez_vous` (
   `idSalle` varchar(50) NOT NULL,
   `statut` enum('accepted','refused','waiting','') NOT NULL DEFAULT 'waiting',
   `titre` varchar(10) NOT NULL,
+  `AllowGroups` enum('true','false') NOT NULL DEFAULT 'true',
   PRIMARY KEY (`idRdv`)
-) ENGINE=InnoDB AUTO_INCREMENT=154 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=212 DEFAULT CHARSET=utf8;
 
 --
 -- Déchargement des données de la table `rendez_vous`
 --
 
-INSERT INTO `rendez_vous` (`idRdv`, `idDemandeur`, `idInterlocuteur`, `Date`, `HeureDebut`, `HeureFin`, `idSalle`, `statut`, `titre`) VALUES
-(151, 18, 19, '2019-07-03', '18:00:00', '19:00:00', '1', 'accepted', 'A01'),
-(152, 18, 20, '2019-07-03', '18:00:00', '19:00:00', '1', 'accepted', 'A01'),
-(153, 18, 20, '2019-07-03', '18:00:00', '19:00:00', '2', 'refused', 'A02');
+INSERT INTO `rendez_vous` (`idRdv`, `idDemandeur`, `idInterlocuteur`, `Date`, `HeureDebut`, `HeureFin`, `idSalle`, `statut`, `titre`, `AllowGroups`) VALUES
+(211, 20, 18, '2019-07-05', '18:00:00', '19:00:00', '1', 'accepted', 'A01', 'false');
 
 -- --------------------------------------------------------
 
