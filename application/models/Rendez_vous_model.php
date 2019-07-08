@@ -37,6 +37,7 @@ class Rendez_vous_model extends CI_Model
     public function isSalleAvailable($num_salle, $date, $heure_debut)
     {
         $this->db->select('*');
+        //$this->distinct();
         $this->db->from($this->table);
         $this->db->where('titre', $num_salle);
         $this->db->where('Date', $date);
@@ -45,6 +46,7 @@ class Rendez_vous_model extends CI_Model
         $this->db->where('HeureFin >', $heure_debut);
 		$this->db->where('statut', 'accepted');
         $this->db->order_by('HeureFin ASC');
+        $this->db->group_by(array("idDemandeur", "Date", "HeureDebut", "HeureFin", "idSalle", "statut", "titre", "AllowGroups"));
 
         return $this->db->get();
     }

@@ -292,7 +292,7 @@ class Site extends CI_Controller {
                 //echo "test";
                 $value_json['statut'] = "non libre";
                 $res = $this->_nextAvailableHour($data['data']);
-
+                //var_dump($res);
 
                 if(!$res)
                 {
@@ -300,17 +300,18 @@ class Site extends CI_Controller {
                 }
                 else
                 {
-                    if(explode(':',$real_heure_debut)[0] < explode(':', $res['heure_debut'])[0])
-                    {
-                        //echo "test";
-                        $value_json['statut'] = "libre";
-                        $html .= '<button class="btn btn-success demande_rdv" value="' . $value['titre'] . '/' . $real_date . '/' . $real_heure_debut . '">
-                                <i class="fa fa-play"></i> Réserver
-                            </button>
-                            </td>
-                        </tr>';
-                    }
-                    else $html .= '<span style="color:red">Se libère à '.$res['heure_fin'].'</span>';
+                        if(explode(':',$real_heure_debut)[0] < explode(':', $res['heure_debut'])[0])
+                        {
+                            $value_json['statut'] = "libre";
+                            $html .= '<button class="btn btn-success demande_rdv" value="' . $value['titre'] . '/' . $real_date . '/' . $real_heure_debut . '">
+                                    <i class="fa fa-play"></i> Réserver
+                                </button>
+                                </td>
+                            </tr>';
+                        }
+                        else $html .= '<span style="color:red">Se libère à '.$res['heure_fin'].'</span>';
+                    
+
                 }
             }
         }
@@ -337,20 +338,23 @@ class Site extends CI_Controller {
 
     private function _nextAvailableHour($res_array)
     {
+        //echo "test";
         $i = 1;
         //var_dump($res_array);
         if(count($res_array) > 1)
         {
             for($i=1; $i < count($res_array); $i++)
             {
+
                 if($res_array[$i-1]['HeureFin'] < $res_array[$i]['HeureDebut']) return $res_array[$i-1]['HeureFin'];
             }
-            if($res_array[$i-1]['HeureFin']  <= '23:00:00') return $res_array[$i-1]['HeureFin'];
+            if($res_array[$i-1]['HeureFin']  <= '23:00:00') return array("heure_debut" => $res_array[$i-1]['HeureDebut'], "heure_fin" =>  $res_array[$i-1]['HeureFin']); // peut etre a changer
             else return false;
         }
         else
         {
             if($res_array[$i-1]['HeureFin'] <= '23:00:00') {
+
                 return array("heure_debut" => $res_array[0]['HeureDebut'], "heure_fin" =>  $res_array[0]['HeureFin']); // peut etre a changer
             }
             else return false;
@@ -369,7 +373,7 @@ class Site extends CI_Controller {
             $etat = "";
             $statut = "";
         }
-        elseif($this->Rendez_vous_model->isSalleTotallyAvailable($num_salles, $real_date, $heure_debut)->num_rows() == 1)
+        elseif($this->Rendez_vous_model->isSalleTotallyAvailable($num_salles, $real_date, $heure_debut)->num_rows() > 0)
         {
             $etat = "disabled";
             if($this->Rendez_vous_model->isSalleTotallyAvailable($num_salles, $real_date, $heure_debut)->result_array()[0]['AllowGroups'])
@@ -395,7 +399,7 @@ class Site extends CI_Controller {
     public function getPlacesRestantes($num_salle, $date, $heure_debut)
     {
         $rdv_by_id_salle = $this->Rendez_vous_model->get_salles($num_salle, $date, $heure_debut);
-        var_dump($rdv_by_id_salle->result_array());
+        //var_dump($rdv_by_id_salle->result_array());
         $tab_places = array();
 
         foreach ($rdv_by_id_salle->result_array() as $key => $rdv) {
