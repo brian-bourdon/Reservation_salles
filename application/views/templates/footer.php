@@ -55,7 +55,7 @@
                         url: "<?= base_url("Site/selectUser") ?>?search=" + dernier_mot,
                         type: 'GET',
                         success: function (html) {
-                            $('#result').html(html+"");
+                            $('#result').html(html);
                         }
                     });
 
