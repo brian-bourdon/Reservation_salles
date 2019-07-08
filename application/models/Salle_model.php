@@ -28,7 +28,6 @@ class Salle_model extends CI_Model {
   }
 
 
-
 }
 
 ?>

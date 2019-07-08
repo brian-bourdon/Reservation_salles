@@ -167,6 +167,8 @@ class Etudiant extends CI_Controller {
 		//redirect(base_url('Site/accueil'));
 	}
 
+	
+
 
 
 }

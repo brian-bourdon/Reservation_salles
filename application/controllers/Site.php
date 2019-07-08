@@ -201,22 +201,36 @@ class Site extends CI_Controller {
 
     // Function appelé par ajax
     //TODO: filtre date heure + bug duplication des affichages de salles a chaque appel ajax
-    public function visionner_salles() {
-        if (isset($_GET['num_salles']))
-            $num_salles = $_GET['num_salles'];
+    public function visionner_salles($app_json=null) {
+        if(isset($app_json) && $app_json['json'])
+        {
+            $num_salles = $app_json['idSalle'];
+            $date = $app_json['Date'];
+            $heure_debut = $app_json['HeureDebut'];
+        }
         else
-            $num_salles = null;
-        if (isset($_GET['date']))
-            $date = $_GET['date'];
-        else
-            $date = null;
-        if (isset($_GET['heure_debut']))
-            $heure_debut = $_GET['heure_debut'];
-        else
-            $heure_debut = null;
-        $html = "";
+        {
+            if (isset($_GET['num_salles']))
+                $num_salles = $_GET['num_salles'];
+            else
+                $num_salles = null;
+            if (isset($_GET['date']))
+                $date = $_GET['date'];
+            else
+                $date = null;
+            if (isset($_GET['heure_debut']))
+                $heure_debut = $_GET['heure_debut'];
+            else
+                $heure_debut = null;
+        }
 
-        $query_get_salles = $this->Rendez_vous_model->get_salles($num_salles, $date, $heure_debut);
+        
+       
+        $html = "";
+        $value_json = array();
+
+
+        $query_get_salles = $this->Rendez_vous_model->get_salles($num_salles);
         foreach ($query_get_salles->result_array() as $key => $value) {
             if (!empty($date) && !empty($heure_debut)) {
 
@@ -247,6 +261,14 @@ class Site extends CI_Controller {
                 $real_heure_debut = $real_date_obj->format('H:00');
 
             }
+            //var_dump($this->getPlacesRestantes($num_salles, $real_date, $real_heure_debut));
+            // Ajout des dispo salle pour les renvoyer en json pour l'app
+            if(isset($app_json) && $app_json['json'])
+            {
+                $value_json['idSalle'] = $value['idSalle'];
+                $value_json['Date'] = $real_date;
+                $value_json['HeureDebut'] = $real_heure_debut;
+            }
 
             $html .= '<tr class= "view_salles">
                        	<th scope="row">' . $value['titre'] . '</th>
@@ -258,6 +280,7 @@ class Site extends CI_Controller {
             //var_dump($data);
             if($data['statut'])
             {
+                $value_json['statut'] = "libre";
                 $html .= '<button class="btn btn-success demande_rdv" value="' . $value['titre'] . '/' . $real_date . '/' . $real_heure_debut . '">
                                 <i class="fa fa-play"></i> Réserver
                             </button>
@@ -267,6 +290,7 @@ class Site extends CI_Controller {
             else
             {
                 //echo "test";
+                $value_json['statut'] = "non libre";
                 $res = $this->_nextAvailableHour($data['data']);
 
 
@@ -276,11 +300,22 @@ class Site extends CI_Controller {
                 }
                 else
                 {
-                    $html .= '<span style="color:red">Se libère à '.$res.'</span>';
+                    if(explode(':',$real_heure_debut)[0] < explode(':', $res['heure_debut'])[0])
+                    {
+                        //echo "test";
+                        $value_json['statut'] = "libre";
+                        $html .= '<button class="btn btn-success demande_rdv" value="' . $value['titre'] . '/' . $real_date . '/' . $real_heure_debut . '">
+                                <i class="fa fa-play"></i> Réserver
+                            </button>
+                            </td>
+                        </tr>';
+                    }
+                    else $html .= '<span style="color:red">Se libère à '.$res['heure_fin'].'</span>';
                 }
             }
         }
-        echo $html;
+        if(isset($app_json) && $app_json['json']) return $value_json;
+        else echo $html;
     }
 
     private function _isAvailable($num_salles, $date, $heure_debut)
@@ -303,7 +338,7 @@ class Site extends CI_Controller {
     private function _nextAvailableHour($res_array)
     {
         $i = 1;
-
+        //var_dump($res_array);
         if(count($res_array) > 1)
         {
             for($i=1; $i < count($res_array); $i++)
@@ -315,7 +350,9 @@ class Site extends CI_Controller {
         }
         else
         {
-            if($res_array[$i-1]['HeureFin'] <= '23:00:00') return $res_array[0]['HeureFin'];
+            if($res_array[$i-1]['HeureFin'] <= '23:00:00') {
+                return array("heure_debut" => $res_array[0]['HeureDebut'], "heure_fin" =>  $res_array[0]['HeureFin']); // peut etre a changer
+            }
             else return false;
         }
     }
@@ -353,6 +390,44 @@ class Site extends CI_Controller {
         echo 'Autoriser d\'autres groupes à travailler dans la même salle';
         echo '</label>';
         echo '</div>';
+    }
+
+    public function getPlacesRestantes($num_salle, $date, $heure_debut)
+    {
+        $rdv_by_id_salle = $this->Rendez_vous_model->get_salles($num_salle, $date, $heure_debut);
+        var_dump($rdv_by_id_salle->result_array());
+        $tab_places = array();
+
+        foreach ($rdv_by_id_salle->result_array() as $key => $rdv) {
+            if(!in_array($rdv['idDemandeur'], $tab_places))
+            {
+                array_push($tab_places,$rdv['idDemandeur']);
+            }
+            if(!in_array($rdv['idInterlocuteur'], $tab_places))
+            {
+                array_push($tab_places,$rdv['idDemandeur']);
+            }
+        }
+        return $tab_places;
+    }
+
+    public function getDispoSalleAPP() {
+        if(isset($_GET['num_salles']) && isset($_GET['date']) && !empty($_GET['num_salles']) && !empty($_GET['date']))
+        {
+            $data['json'] = true;
+            $data['idSalle'] = $_GET['num_salles'];
+            $data['Date'] = $_GET['date'];
+            $real_dispo_salle = array();
+            $d = new DateTime("00:00");
+            for($i = 0; $i<=23; $i++)
+            {
+                $data['HeureDebut'] = $d->format('H:00');
+                $dispo_salle = $this->visionner_salles($data);
+                array_push($real_dispo_salle, $dispo_salle);
+                $d->modify("+1 hour");
+            }
+            echo json_encode($real_dispo_salle);
+        }
     }
 
 
