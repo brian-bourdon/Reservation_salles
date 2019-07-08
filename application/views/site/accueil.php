@@ -226,7 +226,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default btn-block" id="btn_retour_demande_rdv">Retour</button>
-                    <button type="button" class="btn btn-default btn-block" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-default btn-block" style="margin-top: 0;" data-dismiss="modal">Close</button>
                 </div>
             </div>
 
