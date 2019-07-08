@@ -189,7 +189,7 @@ class Site extends CI_Controller {
             foreach ($query->result_array() as $key => $value) {
                 if($this->user->getIdUser() != $_SESSION['idUser'])
                 {
-                    $html .= '<button type="button" class="btn btn-'.$type_btn.' ok" value="'.$this->user->getEmail().'">' 
+                    $html .= '<button type="button" class="btn btn-'.$type_btn.' ok" value="'.$this->user->getEmail().'" style="margin-bottom: 22px;">' 
                             .$this->user->getNom()." ".$this->user->getPrenom().
                             '</button>';
                 }
@@ -379,7 +379,10 @@ class Site extends CI_Controller {
             if($this->Rendez_vous_model->isSalleTotallyAvailable($num_salles, $real_date, $heure_debut)->result_array()[0]['AllowGroups'])
             {
                 $statut = "checked";
-                echo '<input type="hidden" name="value_check_allow_group" value="true" />';
+                $hidden_value = '<input type="hidden" name="value_check_allow_group" value="true" />';
+                $label_info = '<div class="alert alert-warning" role="alert">
+                  <b>Un autre groupe à déja réservé cette salle mais celui-ci autorise d\'autre groupes à rejoindre la même salle</b>
+                </div>';
             }
             else 
             {
@@ -387,13 +390,16 @@ class Site extends CI_Controller {
                 echo '<input type="hidden" name="value_check_allow_group" value="false" />';
             }
         }
-
-        echo '<div class="form-check" id="allow_checked_group">';
+        echo '<div id="allow_checked_group">';
+        if(isset($label_info)) echo $label_info;
+        echo '<div class="form-check">';
         echo '<input class="form-check-input" type="checkbox" value="true" id="allow_other_group" name="allow_other_group"'.$statut.' '.$etat.'>';
         echo '<label class="form-check-label" for="allow_other_group">';
         echo 'Autoriser d\'autres groupes à travailler dans la même salle';
+        if(isset($hidden_value)) echo $hidden_value;
         echo '</label>';
         echo '</div>';
+        echo "</div>";
     }
 
     public function getPlacesRestantes($num_salle, $date, $heure_debut)
