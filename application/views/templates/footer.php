@@ -47,8 +47,8 @@
         <script>
             $(document).ready(function () {
 
-                $(".searchUser").keyup(function () {
 
+                function searchUser() {
                     var taglist = $("#nom_prof").val();
                     var dernier_mot = taglist.split('; ').pop();
                     $.ajax({
@@ -56,11 +56,10 @@
                         type: 'GET',
                         success: function (html) {
                             $('#result').html(html);
+
                         }
                     });
-
-                });
-
+                }
                 function recherche() {
 
                     var num_salles = $("#num_salles").val();
@@ -149,23 +148,27 @@
                     });
                 }
 
-                function load_allow_group() {
-                    var num_salles = $("#titresalle").val();
-                    var date = $("#datesalle").val();
-                    var heure_debut = $("#heure_debut1").val();
+                function load_allow_group(num_salles, date, heure_debut) {
 
                     $.ajax({
-                        url: "<?= base_url("Site/load_allow_groups") ?>?num_salles=" + num_salles + "&date=" + date + "&heure_debut=" + heure_debut,
+                        url: "<?= base_url("Site/load_modal_resa") ?>?num_salles=" + num_salles + "&date=" + date + "&heure_debut=" + heure_debut,
                         type: 'GET',
                         dataType: 'html',
                         success: function (html) {
-                            $('#allow_checked_group').remove();
-                            $(html).appendTo('#allow_group');
+                            $('.real_form_rdv').remove();
+                            $(html).appendTo('#form_rdv');
                         }
                     });
                 }
                 $(document).on('click','.demande_rdv',function () {
-                    load_allow_group();
+                    var num_salles = $(this).val().split('/')[0];
+                    var date = $(this).val().split('/')[1];
+                    var heure_debut = $(this).val().split('/')[2];
+                    load_allow_group(num_salles, date, heure_debut);
+
+                });
+                $(document).on('keyup','.searchUser',function () {
+                    searchUser();
                 });
                 $(document).on('click','#accepted_notif',function () {
                     accepted_notif();

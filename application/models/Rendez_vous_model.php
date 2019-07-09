@@ -3,13 +3,24 @@ class Rendez_vous_model extends CI_Model
 {
 	private $table = 'rendez_vous';
 
-	public function get_rdv_by_id($idRdv)
+	public function get_rdv($num_salle, $date, $heure_debut)
+    {
+          return $this->db->select('*')
+                        ->from($this->table)
+                        ->where('idSalle', $num_salle)
+                        ->where('Date', $date)
+                        ->where('HeureDebut', $heure_debut)
+                        ->get();
+    }
+
+    public function get_rdv_by_id($idRdv)
     {
           return $this->db->select('*')
                         ->from($this->table)
                         ->where('idRdv', $idRdv)
                         ->get();
     }
+
 	public function insert_rdv($data)
 	{
 		return $this->db->insert($this->table, $data);
@@ -76,7 +87,7 @@ class Rendez_vous_model extends CI_Model
                         ->get();
     }
 
-    public function get_interlocuteur_rdv($idDemandeur, $Date, $HeureDebut, $idSalle)
+    public function get_interlocuteur_rdv($idDemandeur, $Date, $HeureDebut, $idSalle) // enlevé id demandeur
     {
                 return $this->db->select('idInterlocuteur')
                         ->from($this->table)
@@ -85,6 +96,26 @@ class Rendez_vous_model extends CI_Model
                         ->where('HeureDebut', $HeureDebut)
                         ->where('idSalle', $idSalle)
                         ->get();
+    }
+    public function get_all_interlocuteur_rdv($Date, $HeureDemandee, $idSalle, $HeureFin)
+    {
+                return $this->db->select('idInterlocuteur, idDemandeur')
+                        ->from($this->table)
+                        ->where('Date', $Date)
+                        ->where('HeureDebut <=', $HeureDemandee)
+                        ->where('HeureFin >=', $HeureFin)
+                        ->where('idSalle', $idSalle)
+                        ->get();
+    }
+
+    public function get_rdv_by_id_salle($idSalle, $Date, $HeureDebut)
+    {
+        return $this->db->select('*')
+                ->from($this->table)
+                ->where('idSalle', $idSalle)
+                ->where('Date', $Date)
+                ->where()
+                ->get();
     }
 
 

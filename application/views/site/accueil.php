@@ -202,24 +202,7 @@
                         </header>
 
                         <div id="form_rdv">
-                            <form class="form" action="<?php echo base_url("Etudiant/demande_rdv"); ?>" method="post">                           
-                                <input class="form-control" type="text" id="titresalle" name="salle" value="" placeholder="Salle" required="" readonly/><br>  
-                                <input class="form-control" type="text" name="date" id="datesalle" value="" placeholder="date" required="" readonly/><br>
-                                <input class="form-control" type="time" name="heure_debut" id="heure_debut1" value="" placeholder="Heure de début" required="" readonly/><br>
-                                <input class="form-control" type="time"  min="" max="23:59" name="heure_fin" id="heure_fin1" value="" required=""/><br>
-                                <input class="form-control searchUser" type="text" id="nom_prof" name="nom_prof" value="" placeholder="Nom du professeur et/ou nom des membres de votre groupe" required=""/><br>
-                                <input class="form-control searchUser" type="hidden" id="idProf" name="idProf" value=""/>
-                                <div id="result"></div>
-                                
-                                <div id="allow_group">
-
-                                </div>
-                                <div id="membre" class="form-check form-check-inline">
-                                    
-                                </div>
-
-                                <input class="btn btn-block btn-success active " type="submit" value="Faire la demande" /><br>
-                            </form>
+                                                
                         </div>
 
                     </div>

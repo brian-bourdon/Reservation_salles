@@ -261,7 +261,7 @@ class Site extends CI_Controller {
                 $real_heure_debut = $real_date_obj->format('H:00');
 
             }
-            //var_dump($this->getPlacesRestantes($num_salles, $real_date, $real_heure_debut));
+            
             // Ajout des dispo salle pour les renvoyer en json pour l'app
             if(isset($app_json) && $app_json['json'])
             {
@@ -361,23 +361,29 @@ class Site extends CI_Controller {
         }
     }
 
-    public function load_allow_groups()
+    public function load_modal_resa()
     {
         $num_salles = $this->Salle_model->getSalleByNumSalles($_GET['num_salles'])->result_array()[0]['idSalle'];
         $date = new DateTime($_GET['date']);
         $real_date = $date->format('Y-m-d');
         $heure_debut = $_GET['heure_debut'];
+        $rdv = $this->Rendez_vous_model->isSalleTotallyAvailable($num_salles, $real_date, $heure_debut);
 
-        if($this->Rendez_vous_model->isSalleTotallyAvailable($num_salles, $real_date, $heure_debut)->num_rows() == 0)
+        if($rdv->num_rows() == 0)
         {
             $etat = "";
             $statut = "";
         }
-        elseif($this->Rendez_vous_model->isSalleTotallyAvailable($num_salles, $real_date, $heure_debut)->num_rows() > 0)
+        elseif($rdv->num_rows() > 0)
         {
+            $test = $this->getPlacesRestantes($real_date, $rdv->result_array()[0]['HeureDebut'], $num_salles);
+            //var_dump($test); // RESULTAT COHERENT, A FINIR
             $etat = "disabled";
-            if($this->Rendez_vous_model->isSalleTotallyAvailable($num_salles, $real_date, $heure_debut)->result_array()[0]['AllowGroups'])
+            if($rdv->result_array()[0]['AllowGroups'])
             {
+                //var_dump($rdv->result_array());
+                $heure_fin = $rdv->result_array()[0]['HeureFin'];
+                $etat_heure_fin = "readonly";
                 $statut = "checked";
                 $hidden_value = '<input type="hidden" name="value_check_allow_group" value="true" />';
                 $label_info = '<div class="alert alert-warning" role="alert">
@@ -390,6 +396,21 @@ class Site extends CI_Controller {
                 echo '<input type="hidden" name="value_check_allow_group" value="false" />';
             }
         }
+
+        if(isset($script)) echo $script;
+        echo '<form class="form real_form_rdv" action="'.base_url("Etudiant/demande_rdv").'" method="post">';                         
+        echo '<input class="form-control" type="text" id="titresalle" name="salle"  value="'.$_GET['num_salles'].'"placeholder="Salle" required="" readonly/><br>'; 
+        echo '<input class="form-control" type="text" name="date" id="datesalle"  value="'.$real_date.'"placeholder="date" required="" readonly/><br>';
+        echo '<input class="form-control" type="time" name="heure_debut" id="heure_debut1"  value="'.$heure_debut.'" placeholder="Heure de début" required="" readonly/><br>';
+        echo '<input class="form-control" type="time"  min="" max="23:59" name="heure_fin" value="';
+        if(isset($heure_fin) && !empty(trim($heure_fin))) echo $heure_fin;
+        echo '" id="heure_fin1" value="" required="" ';
+        if(isset($etat_heure_fin)) echo $etat_heure_fin;
+        echo '/><br>';
+        echo '<input class="form-control searchUser" type="text" id="nom_prof" name="nom_prof" value="" placeholder="Nom du professeur et/ou nom des membres de votre groupe" required=""/><br>';
+        echo '<input class="form-control searchUser" type="hidden" id="idProf" name="idProf" value=""/>';
+        echo '<div id="result"></div>';
+        echo '<div id="allow_group">';
         echo '<div id="allow_checked_group">';
         if(isset($label_info)) echo $label_info;
         echo '<div class="form-check">';
@@ -400,22 +421,29 @@ class Site extends CI_Controller {
         echo '</label>';
         echo '</div>';
         echo "</div>";
+        echo '</div>';
+        echo '<div id="membre" class="form-check form-check-inline">';    
+        echo '</div>';
+        echo '<input class="btn btn-block btn-success active " type="submit" value="Faire la demande" /><br>';
+        echo '</form>';
     }
-
-    public function getPlacesRestantes($num_salle, $date, $heure_debut)
+    public function getPlacesRestantes($Date, $HeureDebut, $idSalle )
     {
-        $rdv_by_id_salle = $this->Rendez_vous_model->get_salles($num_salle, $date, $heure_debut);
-        //var_dump($rdv_by_id_salle->result_array());
+
+        $rdv = $this->Rendez_vous_model->get_rdv($idSalle, $Date, $HeureDebut)->result_array()[0];
+
+        $interlocuteurs = $this->Rendez_vous_model->get_all_interlocuteur_rdv($rdv['Date'], $HeureDebut, $rdv['idSalle'], $rdv['HeureFin']);
+
         $tab_places = array();
 
-        foreach ($rdv_by_id_salle->result_array() as $key => $rdv) {
-            if(!in_array($rdv['idDemandeur'], $tab_places))
+        foreach ($interlocuteurs->result_array() as $key => $rdvv) {
+            if(!in_array($rdvv['idDemandeur'], $tab_places))
             {
-                array_push($tab_places,$rdv['idDemandeur']);
+                array_push($tab_places,$rdvv['idDemandeur']);
             }
-            if(!in_array($rdv['idInterlocuteur'], $tab_places))
+            if(!in_array($rdvv['idInterlocuteur'], $tab_places))
             {
-                array_push($tab_places,$rdv['idDemandeur']);
+                array_push($tab_places,$rdvv['idInterlocuteur']);
             }
         }
         return $tab_places;
@@ -442,5 +470,4 @@ class Site extends CI_Controller {
 
 
 }
-
 ?>
