@@ -92,31 +92,102 @@ class Site extends CI_Controller {
     public function load_rdv()
     {
         $mes_rdv = $this->Rendez_vous_model->get_rdv_for_user($_SESSION['idUser'])->result_array();
+        echo '<ul class="nav nav-tabs">';
+        echo '<li class="nav-item"><a class="nav-link active" data-toggle="tab" href="#home">À venir</a></li>';
+        echo '<li clas="nav-item"><a class="nav-link" data-toggle="tab" href="#menu1">Passés</a></li>';
+        echo '</ul>';
+        echo '<div class="tab-content">';
+        echo '<div id="home" class="tab-pane fade in active show">';
+        echo '<table class="table table-hover tab_rdv">';
+        echo '<thead>';
+        echo '<tr>';
+        echo '<th scope="col">Numéro de salle</th>';
+        echo '<th scope="col">Créateur du groupe</th>';
+        echo '<th scope="col">Membres du groupe</th>';
+        echo '<th scope="col">Date</th>';
+        echo '<th scope="col">Heure de début</th>';
+        echo '<th scope="col">Heure de Fin</th>';
+        echo '<th scope="col" class="">Action </th>';
+        echo '</tr>';
+        echo '</thead>';
+        echo '<tbody>';
         foreach($mes_rdv as $key => $value)
         {
             $titre_salle = $this->Salle_model->getSalleByIdSalles($value['idSalle'])->result()[0];
             $demandeur = $this->User_model->get_user_by_id($value['idDemandeur'])->result_array()[0];
-            echo "<tr class='rdv_value'>";
-            echo "<th scope='row'>".$titre_salle->titre."</th>";
-            echo "<td><a href='#'>@".$demandeur['nom'].$demandeur['prenom']."</a></td>";
-            echo "<td>";
-            $interlocuteurs = $this->Rendez_vous_model->get_interlocuteur_rdv($value['idDemandeur'], $value['Date'], $value['HeureDebut'], $value['idSalle']);
-
-            foreach($interlocuteurs->result_array() as $key2 => $value2)
+            $datetime = new DateTime($value['Date']." ".$value['HeureDebut']);
+            if($datetime->format('Y-m-d H:i:s') >= date('Y-m-d H:i:s'))
             {
-                $user = $this->User_model->get_user_by_id($value2['idInterlocuteur'])->result();
-                echo '<a href="#"">@'.$user[0]->prenom.$user[0]->nom."</a>";
+                echo "<tr class='rdv_value'>";
+                echo "<th scope='row'>".$titre_salle->titre."</th>";
+                echo "<td><a href='#'>@".$demandeur['nom'].$demandeur['prenom']."</a></td>";
+                echo "<td>";
+                $interlocuteurs = $this->Rendez_vous_model->get_interlocuteur_rdv($value['idDemandeur'], $value['Date'], $value['HeureDebut'], $value['idSalle']);
+
+                foreach($interlocuteurs->result_array() as $key2 => $value2)
+                {
+                    $user = $this->User_model->get_user_by_id($value2['idInterlocuteur'])->result();
+                    echo '<a href="#"">@'.$user[0]->prenom.$user[0]->nom."</a>";
+                }
+                echo"</td>";
+                echo "<td>".$value['Date']."</td>";
+                echo "<td>".$value['HeureDebut']."</td>";
+                echo "<td>";
+                echo "<button class='btn btn-danger'> <i class='fa fa-stop'></i> Annuler </button>";
+
+                echo "</td>";
+                echo "</tr>";
             }
-            echo"</td>";
-            echo "<td>".$value['Date']."</td>";
-            echo "<td>".$value['HeureDebut']."</td>";
-            echo "<td>";
-            echo "<button class='btn btn-danger'> <i class='fa fa-stop'></i> Annuler </button>";
-
-            echo "</td>";
-            echo "</tr>";
-
         }
+        echo '</tbody>';
+        echo'</table>';
+        echo '</div>';
+        echo '<div id="menu1" class="tab-pane fade">';
+        echo '<table class="table table-hover tab_rdv">';
+        echo '<thead>';
+        echo '<tr>';
+        echo '<th scope="col">Numéro de salle</th>';
+        echo '<th scope="col">Créateur du groupe</th>';
+        echo '<th scope="col">Membres du groupe</th>';
+        echo '<th scope="col">Date</th>';
+        echo '<th scope="col">Heure de début</th>';
+        echo '<th scope="col" class="">Action </th>';
+        echo '</tr>';
+        echo '</thead>';
+        echo '<tbody>';
+        foreach($mes_rdv as $key => $value)
+        {
+            $titre_salle = $this->Salle_model->getSalleByIdSalles($value['idSalle'])->result()[0];
+            $demandeur = $this->User_model->get_user_by_id($value['idDemandeur'])->result_array()[0];
+            $datetime = new DateTime($value['Date']." ".$value['HeureDebut']);
+
+            if($datetime->format('Y-m-d H:i:s') < date('Y-m-d H:i:s') /*|| ($value['Date'] == date('Y-m-d') && date('H:i:s') > $value['HeureDebut'])*/)
+            {
+                echo "<tr class='rdv_value'>";
+                echo "<th scope='row'>".$titre_salle->titre."</th>";
+                echo "<td><a href='#'>@".$demandeur['nom'].$demandeur['prenom']."</a></td>";
+                echo "<td>";
+                $interlocuteurs = $this->Rendez_vous_model->get_interlocuteur_rdv($value['idDemandeur'], $value['Date'], $value['HeureDebut'], $value['idSalle']);
+
+                foreach($interlocuteurs->result_array() as $key2 => $value2)
+                {
+                    $user = $this->User_model->get_user_by_id($value2['idInterlocuteur'])->result();
+                    echo '<a href="#"">@'.$user[0]->prenom.$user[0]->nom."</a>";
+                }
+                echo"</td>";
+                echo "<td>".$value['Date']."</td>";
+                echo "<td>".$value['HeureDebut']."</td>";
+                echo "<td>";
+                echo "<button class='btn btn-danger'> <i class='fa fa-stop'></i> Annuler </button>";
+
+                echo "</td>";
+                echo "</tr>";
+            }
+        }
+        echo '</tbody>';
+        echo'</table>';
+        echo '</div>';
+        echo '</div>';
     }
 
     public function reload_count_notif()
@@ -274,7 +345,9 @@ class Site extends CI_Controller {
                        	<th scope="row">' . $value['titre'] . '</th>
                         <td>' . $real_date . '</td>
                         <td>' . $real_heure_debut  . '</td>
+                        <td>'.$value['capacite'].'</td>
                         <td>';
+
             //echo "test ".$this->_isAvailable($value['titre'], $real_date_obj->format('Y-m-d'), $real_heure_debut);
             $data = $this->_isAvailable($value['titre'], $real_date_obj->format('Y-m-d'), $real_heure_debut);
             //var_dump($data);
@@ -363,7 +436,9 @@ class Site extends CI_Controller {
 
     public function load_modal_resa()
     {
-        $num_salles = $this->Salle_model->getSalleByNumSalles($_GET['num_salles'])->result_array()[0]['idSalle'];
+        $query_salles = $this->Salle_model->getSalleByNumSalles($_GET['num_salles'])->result_array();
+        $num_salles = $query_salles[0]['idSalle'];
+        $capacite = $query_salles[0]['capacite'];
         $date = new DateTime($_GET['date']);
         $real_date = $date->format('Y-m-d');
         $heure_debut = $_GET['heure_debut'];
@@ -376,19 +451,52 @@ class Site extends CI_Controller {
         }
         elseif($rdv->num_rows() > 0)
         {
-            $test = $this->getPlacesRestantes($real_date, $rdv->result_array()[0]['HeureDebut'], $num_salles);
-            //var_dump($test); // RESULTAT COHERENT, A FINIR
+            $personnes_presentes = $this->getPlacesRestantes($real_date, $rdv->result_array()[0]['HeureDebut'], $num_salles);
+            $places_restantes_salle = $capacite - count($personnes_presentes);
+            //var_dump($personnes_presentes); // RESULTAT COHERENT, A FINIR
             $etat = "disabled";
             if($rdv->result_array()[0]['AllowGroups'])
             {
                 //var_dump($rdv->result_array());
                 $heure_fin = $rdv->result_array()[0]['HeureFin'];
+                $heure_debut_rdv = $rdv->result_array()[0]['HeureDebut'];
                 $etat_heure_fin = "readonly";
                 $statut = "checked";
                 $hidden_value = '<input type="hidden" name="value_check_allow_group" value="true" />';
                 $label_info = '<div class="alert alert-warning" role="alert">
                   <b>Un autre groupe à déja réservé cette salle mais celui-ci autorise d\'autre groupes à rejoindre la même salle</b>
                 </div>';
+                $infos_groupe = 
+                '<div id="accordion">
+                <div class="card">
+                <div class="card-header" id="headingOne">
+                <h5 class="mb-0">
+                <button class="btn btn-link" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                  Personnes présentes | Reste '.$places_restantes_salle.' places
+                </button>
+              </h5>
+            </div>
+
+            <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordion">
+              <div class="card-body">';
+                foreach ($personnes_presentes as $p => $p_val) {
+                    $query = $this->User_model->get_user_by_id($p_val);
+
+                    if($query->num_rows() > 0 && $query) 
+                    {
+                        $this->load->library('User', $query->result_array()[0]);
+                        if($this->user->getStatut() == "etudiant") $color = "blue";
+                        else if($this->user->getStatut() == "professeur") $color = "orange";
+                        else if($this->user->getStatut() == "admin") $color = "red";
+                        else $color = "blue";
+                        $infos_groupe .= "<span style='color:".$color."'>@".$this->user->getNom().$this->user->getPrenom()."</span></br>";
+                        unset($this->user);
+                    }
+                }
+            $infos_groupe .= '
+                    </div>
+                </div>
+            </div>';
             }
             else 
             {
@@ -401,9 +509,13 @@ class Site extends CI_Controller {
         echo '<form class="form real_form_rdv" action="'.base_url("Etudiant/demande_rdv").'" method="post">';                         
         echo '<input class="form-control" type="text" id="titresalle" name="salle"  value="'.$_GET['num_salles'].'"placeholder="Salle" required="" readonly/><br>'; 
         echo '<input class="form-control" type="text" name="date" id="datesalle"  value="'.$real_date.'"placeholder="date" required="" readonly/><br>';
-        echo '<input class="form-control" type="time" name="heure_debut" id="heure_debut1"  value="'.$heure_debut.'" placeholder="Heure de début" required="" readonly/><br>';
+        echo '<input class="form-control" type="time" name="heure_debut" id="heure_debut1"  value="';
+        if(isset($heure_debut_rdv) && !empty($heure_debut_rdv)) echo $heure_debut_rdv;
+        else echo $heure_debut;
+        echo '" placeholder="Heure de début" required="" readonly/><br>';
         echo '<input class="form-control" type="time"  min="" max="23:59" name="heure_fin" value="';
         if(isset($heure_fin) && !empty(trim($heure_fin))) echo $heure_fin;
+        else echo strftime('%H:%M', strtotime($heure_debut)+3600);
         echo '" id="heure_fin1" value="" required="" ';
         if(isset($etat_heure_fin)) echo $etat_heure_fin;
         echo '/><br>';
@@ -413,7 +525,8 @@ class Site extends CI_Controller {
         echo '<div id="allow_group">';
         echo '<div id="allow_checked_group">';
         if(isset($label_info)) echo $label_info;
-        echo '<div class="form-check">';
+        if(isset($infos_groupe)) echo $infos_groupe;
+        echo '<div class="form-check" style="margin-top: 16px;">';
         echo '<input class="form-check-input" type="checkbox" value="true" id="allow_other_group" name="allow_other_group"'.$statut.' '.$etat.'>';
         echo '<label class="form-check-label" for="allow_other_group">';
         echo 'Autoriser d\'autres groupes à travailler dans la même salle';
@@ -467,7 +580,5 @@ class Site extends CI_Controller {
             echo json_encode($real_dispo_salle);
         }
     }
-
-
 }
 ?>

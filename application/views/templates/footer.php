@@ -110,7 +110,7 @@
                         dataType: 'html',
                         success: function (html) {
                             reload_count_notif();
-                            $('.rdv_value').remove();
+                            $('.tab_rdv').remove();
                             $(html).appendTo('#rdv_body');
                         }
                     });
@@ -147,7 +147,19 @@
                         }
                     });
                 }
+                
+                function totalTimes(times) {
+                    var totalM = times.map(function (hhmm) {
+                        var parts = hhmm.split(":");
+                        return (+parts[0] * 60) + (+parts[1]);
+                    }).reduce(function (m1, m2) {
+                        return m1 + m2;
+                    }, 0),
+                            h = Math.floor(totalM / 60),
+                            m = totalM % 60;
 
+                    return h + ':' + (m < 10 ? '0' : '') + m;
+                }
                 function load_allow_group(num_salles, date, heure_debut) {
 
                     $.ajax({
@@ -157,6 +169,9 @@
                         success: function (html) {
                             $('.real_form_rdv').remove();
                             $(html).appendTo('#form_rdv');
+
+                            //$("#heure_fin1").attr("min", totalTimes([heure_debut, "1:00"]));
+                            //$("#heure_fin1").val(totalTimes([heure_debut, "1:00"]));
                         }
                     });
                 }

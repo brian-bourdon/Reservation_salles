@@ -46,8 +46,8 @@ $(document).ready(function () {
         $("#titresalle").val(res[0]);
         $("#datesalle").val(res[1]);
         $("#heure_debut1").val(res[2]);
-        $("#heure_fin1").attr("min", totalTimes([res[2], "1:00"]));
-        $("#heure_fin1").val(totalTimes([res[2], "1:00"]));
+        //$("#heure_fin1").attr("min", totalTimes([res[2], "1:00"]));
+        //$("#heure_fin1").val(totalTimes([res[2], "1:00"]));
 
     });
     $("body").on("click", "#btn_retour_demande_rdv", function () {

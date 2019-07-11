@@ -139,22 +139,8 @@
                         <h4 class="modal-title">Mes réservations</h4>
                     </div>
                     <div class="modal-body">
-                        <div>
-                            <table class="table table-hover">
-                                <thead>
-                                    <tr>
-                                        <th scope="col">Numéro de salle</th>
-                                        <th scope="col">Créateur du groupe</th>
-                                        <th scope="col">Membres du groupe</th>
-                                        <th scope="col">Date</th>
-                                        <th scope="col">Heure de début</th>
-                                        <th scope="col" class="">Action </th>
-                                    </tr>
-                                </thead>
-                                <tbody id="rdv_body">
+                        <div id="rdv_body">
 
-                                </tbody>
-                            </table>
 
                         </div>
 

@@ -192,6 +192,7 @@
                                         <th scope="col">Heure
                                             <input class="form-control searchnum" id="heure_debut" type="time" min="<?php echo date('H:i'); ?>" max="23:00" name="time" value="" required=""/><br>
                                         </th>
+                                        <th scope="col" class="">Capacité </th>
                                         <th scope="col" class="">Option </th>
                                     </tr>
                                 </thead>
