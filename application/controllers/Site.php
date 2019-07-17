@@ -150,6 +150,7 @@ class Site extends CI_Controller {
         echo '<th scope="col">Membres du groupe</th>';
         echo '<th scope="col">Date</th>';
         echo '<th scope="col">Heure de début</th>';
+        echo '<th scope="col">Heure de Fin</th>';
         //echo '<th scope="col" class="">Action </th>';
         echo '</tr>';
         echo '</thead>';
@@ -176,6 +177,7 @@ class Site extends CI_Controller {
                 echo"</td>";
                 echo "<td>".$value['Date']."</td>";
                 echo "<td>".$value['HeureDebut']."</td>";
+                echo "<td>".$value['HeureFin']."</td>";
                 echo "<td>";
                 //echo "<button class='btn btn-danger'> <i class='fa fa-stop'></i> Annuler </button>";
 
