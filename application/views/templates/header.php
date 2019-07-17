@@ -139,8 +139,11 @@
                         <h4 class="modal-title">Mes réservations</h4>
                     </div>
                     <div class="modal-body">
+                            <ul class="nav nav-tabs">
+                                <li class="nav-item"><a class="nav-link active" data-toggle="tab" href="#home">À venir</a></li>
+                                <li clas="nav-item"><a class="nav-link" data-toggle="tab" href="#menu1">Passés</a></li>
+                            </ul>
                         <div id="rdv_body">
-
 
                         </div>
 

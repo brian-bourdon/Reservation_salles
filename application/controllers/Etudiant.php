@@ -167,7 +167,18 @@ class Etudiant extends CI_Controller {
 		//redirect(base_url('Site/accueil'));
 	}
 
-	
+	public function annuler_rdv()
+	{
+		if(isset($_GET['date'])) $date = $_GET['date'];
+		if(isset($_GET['heure_debut'])) $heure_debut = $_GET['heure_debut'];
+		if(isset($_GET['idSalle'])) $idSalle = $_GET['idSalle'];
+		if(isset($_GET['idInterlocuteur'])) $idInterlocuteur = $_GET['idInterlocuteur'];
+
+		$res = $this->Rendez_vous_model->annuler_rdv($date, $heure_debut, $idSalle, $idInterlocuteur);
+		$this->session->set_flashdata('annuler_rdv', $res);
+
+		redirect('Site/accueil');
+	}
 
 
 

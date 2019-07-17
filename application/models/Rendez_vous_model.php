@@ -80,7 +80,7 @@ class Rendez_vous_model extends CI_Model
     {
         $where = "statut='accepted' AND (idInterlocuteur='$id' OR idDemandeur='$id')";
 
-        return $this->db->select('idDemandeur, Date, HeureDebut, idSalle')
+        return $this->db->select('idDemandeur, Date, HeureDebut, HeureFin, idSalle')
                         ->distinct()
                         ->from($this->table)
                         ->where($where)
@@ -116,6 +116,14 @@ class Rendez_vous_model extends CI_Model
                 ->where('Date', $Date)
                 ->where()
                 ->get();
+    }
+
+    public function annuler_rdv($date, $heure_debut, $idSalle, $idInterlocuteur)
+    {
+        $where = "Date = '$date' and HeureDebut = '$heure_debut' and idSalle = '$idSalle' and (idInterlocuteur = '$idInterlocuteur' OR idDemandeur = '$idInterlocuteur')";
+
+        $this->db->where($where);
+        return $this->db->delete($this->table);
     }
 
 

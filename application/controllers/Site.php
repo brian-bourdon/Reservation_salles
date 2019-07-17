@@ -92,13 +92,11 @@ class Site extends CI_Controller {
     public function load_rdv()
     {
         $mes_rdv = $this->Rendez_vous_model->get_rdv_for_user($_SESSION['idUser'])->result_array();
-        echo '<ul class="nav nav-tabs">';
-        echo '<li class="nav-item"><a class="nav-link active" data-toggle="tab" href="#home">À venir</a></li>';
-        echo '<li clas="nav-item"><a class="nav-link" data-toggle="tab" href="#menu1">Passés</a></li>';
-        echo '</ul>';
-        echo '<div class="tab-content">';
+
+
+        echo '<div class="tab-content tab_rdv">';
         echo '<div id="home" class="tab-pane fade in active show">';
-        echo '<table class="table table-hover tab_rdv">';
+        echo '<table class="table table-hover ">';
         echo '<thead>';
         echo '<tr>';
         echo '<th scope="col">Numéro de salle</th>';
@@ -132,8 +130,9 @@ class Site extends CI_Controller {
                 echo"</td>";
                 echo "<td>".$value['Date']."</td>";
                 echo "<td>".$value['HeureDebut']."</td>";
+                echo "<td>".$value['HeureFin']."</td>";
                 echo "<td>";
-                echo "<button class='btn btn-danger'> <i class='fa fa-stop'></i> Annuler </button>";
+                echo "<a href='".base_url('Etudiant/annuler_rdv?date='.$value['Date'].'&heure_debut='.$value['HeureDebut'].'&idSalle='.$value['idSalle'].'&idInterlocuteur='.$_SESSION['idUser'])."'><button class='btn btn-danger'> <i class='fa fa-stop'></i> Annuler </button></a>";
 
                 echo "</td>";
                 echo "</tr>";
@@ -151,7 +150,7 @@ class Site extends CI_Controller {
         echo '<th scope="col">Membres du groupe</th>';
         echo '<th scope="col">Date</th>';
         echo '<th scope="col">Heure de début</th>';
-        echo '<th scope="col" class="">Action </th>';
+        //echo '<th scope="col" class="">Action </th>';
         echo '</tr>';
         echo '</thead>';
         echo '<tbody>';
@@ -178,7 +177,7 @@ class Site extends CI_Controller {
                 echo "<td>".$value['Date']."</td>";
                 echo "<td>".$value['HeureDebut']."</td>";
                 echo "<td>";
-                echo "<button class='btn btn-danger'> <i class='fa fa-stop'></i> Annuler </button>";
+                //echo "<button class='btn btn-danger'> <i class='fa fa-stop'></i> Annuler </button>";
 
                 echo "</td>";
                 echo "</tr>";
@@ -295,7 +294,7 @@ class Site extends CI_Controller {
                 $heure_debut = null;
         }
 
-        
+
        
         $html = "";
         $value_json = array();

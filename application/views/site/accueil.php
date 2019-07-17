@@ -11,6 +11,16 @@
             <span aria-hidden="true">&times;</span>
             </button>
             </div>';
+            if (!empty($this->session->flashdata('annuler_rdv'))) {
+                    echo '<div class="alert alert-success" role="alert">';
+                if($this->session->flashdata('annuler_rdv')) echo 'Votre rendez vous à bien été annulé';
+                else echo 'Erreur lors de l\'annulation';
+                echo '<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+            </button>
+            </div>';
+            }
+
                 ?>
                 <h3><?= $_SESSION['prenom'] . " " . $_SESSION['nom']." (".$_SESSION['statut'].")" ?></h3>
                 <br>
