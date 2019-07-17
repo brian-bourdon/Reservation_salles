@@ -18,6 +18,10 @@ class User {
 		$this->pwd = $parameters['pwd'];
 		
     }
+
+    public function __destruct() {
+        
+    }
 		
     function getIdUser() {
         return $this->idUser;

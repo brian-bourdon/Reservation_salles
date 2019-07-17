@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
     <head>
         <meta charset="utf-8">
         <title>Projet Annuel</title>
@@ -7,9 +7,13 @@
         <meta content="" name="keywords">
         <meta content="" name="description">
 
-        <!-- Favicons -->
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-status-bar-style" content="black">
+        <meta name="apple-mobile-web-app-title" content="Weather PWA">
         <link href="<?php echo base_url('assets/img/favicon.png'); ?>" rel="icon">
         <link href="<?php echo base_url('assets/img/apple-touch-icon.png'); ?>" rel="apple-touch-icon">
+        <link rel="<?php echo base_url('assets/img/apple-touch-icon.png'); ?>">
+        <link rel="manifest" href="<?php echo base_url('assets/js/manifest.json'); ?>">
 
         <!-- Google Fonts -->
         <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,700,700i|Montserrat:300,400,500,700" rel="stylesheet">
@@ -34,6 +38,7 @@
           Author: BootstrapMade.com
           License: https://bootstrapmade.com/license/
         ======================================================= -->
+
     </head>
 
     <body>
@@ -65,7 +70,9 @@
                             <li class="menu-active"><a href="<?php echo base_url('Site/accueil'); ?>" >Accueil</a></li>
                             <li class="menu-has-children"  data-toggle="modal" data-target="#myMod">
                                 <a href="#">Notifications 
-                                    <span class='badge-success circle' style="padding:3px;"> 10 </span>
+                                    <span id="counter_notif" class='badge-success circle' style="padding:3px;"> 
+
+                                    </span>
                                 </a>
                             </li>
                             <li class="menu-has-children"><a href=""> <?= $_SESSION['nom'] . " " . $_SESSION['prenom'] ?></a>
@@ -107,27 +114,7 @@
                                     <th scope="col" class="">Rejoindre le groupe </th>
                                 </tr>
                             </thead>
-                            <tbody>
-                                <tr>
-                                    <th scope="row">A1</th>
-                                    <td>@Kyriel, @Brain @Kev</td>
-                                    <td>12/05/2019</td>
-                                    <td>12:00</td>
-                                    <td>
-                                        <button class='btn btn-success'> <i class='fa fa-play'></i> oui </button>
-                                        <button class='btn btn-danger'> <i class='fa fa-stop'></i> non </button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">A2</th>
-                                    <td>@Kyriel, @Brain @Kev</td>
-                                    <td>12/05/2019</td>
-                                    <td>09:20</td>
-                                    <td>
-                                        <button class='btn btn-success'> <i class='fa fa-play'></i> oui </button>
-                                        <button class='btn btn-danger'> <i class='fa fa-stop'></i> non </button>
-                                    </td>
-                                </tr>
+                            <tbody id="notif_body">
 
                             </tbody>
                         </table>    
@@ -149,34 +136,14 @@
                 <!-- Modal content-->
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h4 class="modal-title">Mes rendez-vous</h4>
+                        <h4 class="modal-title">Mes réservations</h4>
                     </div>
                     <div class="modal-body">
-                        <div>
-                            <table class="table table-hover">
-                                <thead>
-                                    <tr>
-                                        <th scope="col">Numéro de salle</th>
-                                        <th scope="col">Membres du groupe</th>
-                                        <th scope="col">Date</th>
-                                        <th scope="col">Heure de début</th>
-                                        <th scope="col" class="">Rejoindre le groupe </th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-
-                                    <tr>
-                                        <th scope="row">A2</th>
-                                        <td>@Kyriel, @Brian @Kev</td>
-                                        <td>12/05/2019</td>
-                                        <td>09:20</td>
-                                        <td>
-                                            <button class='btn btn-danger'> <i class='fa fa-stop'></i> Annuler </button>
-                                        </td>
-                                    </tr>
-
-                                </tbody>
-                            </table>
+                            <ul class="nav nav-tabs">
+                                <li class="nav-item"><a class="nav-link active" data-toggle="tab" href="#home">À venir</a></li>
+                                <li clas="nav-item"><a class="nav-link" data-toggle="tab" href="#menu1">Passés</a></li>
+                            </ul>
+                        <div id="rdv_body">
 
                         </div>
 

@@ -55,6 +55,8 @@ class User_model extends CI_Model {
         return array($res, $idUser);
     }
 
+
+
 }
 
 ?>

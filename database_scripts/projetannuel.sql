@@ -1,20 +1,22 @@
 -- phpMyAdmin SQL Dump
--- version 4.1.14
--- http://www.phpmyadmin.net
+-- version 4.8.4
+-- https://www.phpmyadmin.net/
 --
--- Client :  127.0.0.1
--- Généré le :  Jeu 09 Mai 2019 à 17:50
--- Version du serveur :  5.6.17
--- Version de PHP :  5.5.12
+-- Hôte : 127.0.0.1:3306
+-- Généré le :  ven. 05 juil. 2019 à 15:34
+-- Version du serveur :  5.7.24
+-- Version de PHP :  7.2.14
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+SET AUTOCOMMIT = 0;
+START TRANSACTION;
 SET time_zone = "+00:00";
 
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8 */;
+/*!40101 SET NAMES utf8mb4 */;
 
 --
 -- Base de données :  `projetannuel`
@@ -23,26 +25,44 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
+-- Structure de la table `notification`
+--
+
+DROP TABLE IF EXISTS `notification`;
+CREATE TABLE IF NOT EXISTS `notification` (
+  `idNotif` int(11) NOT NULL AUTO_INCREMENT,
+  `idRdv` int(11) NOT NULL,
+  `idUser` int(11) NOT NULL,
+  PRIMARY KEY (`idNotif`)
+) ENGINE=MyISAM AUTO_INCREMENT=73 DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
 -- Structure de la table `rendez_vous`
 --
 
+DROP TABLE IF EXISTS `rendez_vous`;
 CREATE TABLE IF NOT EXISTS `rendez_vous` (
   `idRdv` int(11) NOT NULL AUTO_INCREMENT,
   `idDemandeur` int(11) NOT NULL,
   `idInterlocuteur` int(11) NOT NULL,
+  `Date` date NOT NULL DEFAULT '0001-01-01',
   `HeureDebut` time NOT NULL,
   `HeureFin` time NOT NULL,
-  `Salle` varchar(50) NOT NULL,
-  `status` varchar(255) NOT NULL,
+  `idSalle` varchar(50) NOT NULL,
+  `statut` enum('accepted','refused','waiting','') NOT NULL DEFAULT 'waiting',
+  `titre` varchar(10) NOT NULL,
+  `AllowGroups` enum('true','false') NOT NULL DEFAULT 'true',
   PRIMARY KEY (`idRdv`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
+) ENGINE=InnoDB AUTO_INCREMENT=212 DEFAULT CHARSET=utf8;
 
 --
--- Contenu de la table `rendez_vous`
+-- Déchargement des données de la table `rendez_vous`
 --
 
-INSERT INTO `rendez_vous` (`idRdv`, `idDemandeur`, `idInterlocuteur`, `HeureDebut`, `HeureFin`, `Salle`, `status`) VALUES
-(1, 9, 9999, '15:00:00', '16:00:00', 'A13', '');
+INSERT INTO `rendez_vous` (`idRdv`, `idDemandeur`, `idInterlocuteur`, `Date`, `HeureDebut`, `HeureFin`, `idSalle`, `statut`, `titre`, `AllowGroups`) VALUES
+(211, 20, 18, '2019-07-05', '18:00:00', '19:00:00', '1', 'accepted', 'A01', 'false');
 
 -- --------------------------------------------------------
 
@@ -50,13 +70,23 @@ INSERT INTO `rendez_vous` (`idRdv`, `idDemandeur`, `idInterlocuteur`, `HeureDebu
 -- Structure de la table `salle`
 --
 
+DROP TABLE IF EXISTS `salle`;
 CREATE TABLE IF NOT EXISTS `salle` (
   `idSalle` int(11) NOT NULL AUTO_INCREMENT,
   `titre` varchar(255) NOT NULL,
   `capacite` int(11) NOT NULL,
   `statut` varchar(255) NOT NULL,
   PRIMARY KEY (`idSalle`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
+
+--
+-- Déchargement des données de la table `salle`
+--
+
+INSERT INTO `salle` (`idSalle`, `titre`, `capacite`, `statut`) VALUES
+(1, 'A01', 20, 'test'),
+(2, 'A02', 30, 'test'),
+(3, 'A03', 25, 'test');
 
 -- --------------------------------------------------------
 
@@ -64,6 +94,7 @@ CREATE TABLE IF NOT EXISTS `salle` (
 -- Structure de la table `user`
 --
 
+DROP TABLE IF EXISTS `user`;
 CREATE TABLE IF NOT EXISTS `user` (
   `idUser` int(11) NOT NULL AUTO_INCREMENT,
   `email` varchar(255) NOT NULL,
@@ -72,23 +103,17 @@ CREATE TABLE IF NOT EXISTS `user` (
   `statut` varchar(255) NOT NULL,
   `pwd` varchar(255) NOT NULL,
   PRIMARY KEY (`idUser`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=17 ;
+) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=latin1;
 
 --
--- Contenu de la table `user`
+-- Déchargement des données de la table `user`
 --
 
 INSERT INTO `user` (`idUser`, `email`, `nom`, `prenom`, `statut`, `pwd`) VALUES
-(1, 'k@gmail.fr', 'DOSSOU', 'KYRIEL', 'professeur', 'f23ccd066f8236c6f97a2a62d3f9f9f5'),
-(5, 'kdossou1@myges.fr', 'DOSSOU', 'Kyriel', 'etudiant', 'df8fede7ff71608e24a5576326e41c75'),
-(6, 'dossou1@myges.com', 'DOSSOU', 'Kyriel', 'etudiant', 'ceb8447cc4ab78d2ec34cd9f11e4bed2'),
-(7, 'McDo@food.fr', 'Mc', 'Donalds', 'etudiant', '62506be34d574da4a0d158a67253ea99'),
-(8, 'boobs@hot.fr', 'logic', 'Boobs', 'etudiant', 'd091fccc62e2d24ab101dbe01ce844f6'),
-(9, 'zdsf@myges.com', 'Brian', 'Bourdon', 'etudiant', '098f6bcd4621d373cade4e832627b4f6'),
-(10, 'fzuegfzu@myges.comfvv', 'rgzb', 'vqf', 'etudiant', '098f6bcd4621d373cade4e832627b4f6'),
-(11, 'bbourdon1@myges.frfff', 'rgzbff', 've', 'professeur', '098f6bcd4621d373cade4e832627b4f6'),
-(15, 'fbve@fze.com', 'gvbeyqv', 'fbz', 'etudiant', '098f6bcd4621d373cade4e832627b4f6'),
-(16, 'fbve@fze.com', 'gvbeyqv', 'fbz', 'professeur', '098f6bcd4621d373cade4e832627b4f6');
+(18, 'brian78.b@gmail.com', 'Bourdon', 'Brian', 'etudiant', '098f6bcd4621d373cade4e832627b4f6'),
+(19, 'kyriel@gmail.com', 'test', 'Kyriel', 'etudiant', '098f6bcd4621d373cade4e832627b4f6'),
+(20, 'kevin@gmail.com', 'test', 'Kevin', 'etudiant', '098f6bcd4621d373cade4e832627b4f6');
+COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
