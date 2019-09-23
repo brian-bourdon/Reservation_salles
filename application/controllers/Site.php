@@ -581,5 +581,37 @@ class Site extends CI_Controller {
             echo json_encode($real_dispo_salle);
         }
     }
+
+    public function ApiConnection() {
+        if(isset($_GET['email']) && isset($_GET['pwd']) && isset($_GET['statut']) && !empty(trim($_GET['email'])) && !empty(trim($_GET['pwd'])) && !empty(trim($_GET['statut'])))
+        {
+            $this->load->database();
+
+            $query = $this->User_model->get_user_by_mail(trim($_GET['email']));
+            if ($query->num_rows() == 1) {
+
+                $this->load->library('User', $query->result_array()[0]);
+
+                //var_dump($this->user);
+
+                if (null !== $this->user->getPwd() && $this->user->getPwd() === trim($_GET['pwd']) && trim($_GET['statut']) == $this->user->getStatut()) {
+                    $user_data = array(
+                        'prenom' => $this->user->getPrenom(),
+                        'nom' => $this->user->getNom(),
+                        'mail' => $this->user->getEmail(),
+                        'idUser' => $this->user->getIdUser(),
+                        'statut' => $this->user->getStatut(),
+                        'logged_in' => TRUE
+                    );
+                    echo json_encode($user_data);
+                } else {
+                    echo "BAD_IDENTIFIERS";
+                }
+            } else {
+                echo "WRONG_EMAIL";
+            }
+            $this->db->close();
+        }
+    }
 }
 ?>
