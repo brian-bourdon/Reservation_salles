@@ -563,6 +563,7 @@ class Site extends CI_Controller {
         return $tab_places;
     }
 
+    // Obtenir la dispo d'une salle pour la journéee => pour l'appli android
     public function getDispoSalleAPP() {
         if(isset($_GET['num_salles']) && isset($_GET['date']) && !empty($_GET['num_salles']) && !empty($_GET['date']))
         {
@@ -581,7 +582,7 @@ class Site extends CI_Controller {
             echo json_encode($real_dispo_salle);
         }
     }
-
+    // Connection pour l'appli android
     public function ApiConnection() {
         if(isset($_GET['email']) && isset($_GET['pwd']) && isset($_GET['statut']) && !empty(trim($_GET['email'])) && !empty(trim($_GET['pwd'])) && !empty(trim($_GET['statut'])))
         {

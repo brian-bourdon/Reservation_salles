@@ -13,6 +13,11 @@ body {
   font-family: "Open Sans", sans-serif;
 }
 
+.modal-lg
+{
+  max-width: 64% !important;
+}
+
 a {
   color: #18d26e;
   transition: 0.5s;

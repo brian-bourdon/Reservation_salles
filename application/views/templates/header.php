@@ -136,7 +136,7 @@
                 <!-- Modal content-->
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h4 class="modal-title">Mes réservations</h4>
+                        <h3 class="modal-title">Mes réservations</h3>
                     </div>
                     <div class="modal-body">
                             <ul class="nav nav-tabs">

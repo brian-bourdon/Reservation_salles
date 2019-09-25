@@ -179,7 +179,7 @@ class Etudiant extends CI_Controller {
 
 		redirect('Site/accueil');
 	}
-
+	// Inscription etudiant pour l'appli android
 	public function ApiInscriptionEtudiant()
 	{
 		if(isset($_GET['nom']) && !empty(trim($_GET['nom'])) && isset($_GET['prenom']) && !empty(trim($_GET['prenom']))
@@ -201,7 +201,7 @@ class Etudiant extends CI_Controller {
 			$res = $this->User_model->insert_user($this->user);
 			
 			if(isset($res) && !empty($res[0])) echo $res[0];
-			else echo "FAILED";
+			else echo 0;
 		}
 
 
