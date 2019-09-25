@@ -180,6 +180,33 @@ class Etudiant extends CI_Controller {
 		redirect('Site/accueil');
 	}
 
+	public function ApiInscriptionEtudiant()
+	{
+		if(isset($_GET['nom']) && !empty(trim($_GET['nom'])) && isset($_GET['prenom']) && !empty(trim($_GET['prenom']))
+		&& isset($_GET['mail']) && !empty(trim($_GET['mail'])) && isset($_GET['pwd']) && !empty(trim($_GET['pwd'])))
+		{
+			echo "test";
+			$data = array(
+						'prenom'  => $_GET['prenom'],
+						'nom'     => $_GET['nom'],
+						'email'	  => $_GET['mail'],
+						'pwd'  	  => $_GET['pwd'],
+						'statut'  => 'etudiant'
+			);
+			$this->load->library('User', $data);
+
+			//var_dump($this->user);
+			//TODO: Mettre regle de verif champs
+			
+			$res = $this->User_model->insert_user($this->user);
+			
+			if(isset($res) && !empty($res[0])) echo $res[0];
+			else echo "FAILED";
+		}
+
+
+	}
+
 
 
 }

@@ -588,7 +588,7 @@ class Site extends CI_Controller {
             $this->load->database();
 
             $query = $this->User_model->get_user_by_mail(trim($_GET['email']));
-            if ($query->num_rows() == 1) {
+            if ($query->num_rows() >= 1) {
 
                 $this->load->library('User', $query->result_array()[0]);
 
