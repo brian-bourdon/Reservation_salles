@@ -105,6 +105,7 @@ class Rendez_vous_model extends CI_Model
                         ->where('HeureDebut <=', $HeureDemandee)
                         ->where('HeureFin >=', $HeureFin)
                         ->where('idSalle', $idSalle)
+                        ->where('statut', 'accepted')
                         ->get();
     }
 
