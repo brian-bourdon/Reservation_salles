@@ -57,6 +57,7 @@ class Etudiant extends CI_Controller {
 		$idSalle = "";
 		if ($salle->num_rows() == 1) {
 			$idSalle = $salle->result_array()[0]['idSalle'];
+			$capacite = $salle->result_array()[0]['capacite'];
 		}
 
 		foreach ($mails_demandeurs as $key => $mail) {
@@ -68,7 +69,11 @@ class Etudiant extends CI_Controller {
 				}
 			}
 		}
-
+		echo $date->format('Y-m-d');
+		echo "</br>".$_POST['heure_debut']."</br>";
+		echo $idSalle;
+		$personnes_presentes = $this->getPlacesRestantes($date->format('Y-m-d'), $_POST['heure_debut'], $idSalle);
+        $places_restantes_salle = $capacite - count($personnes_presentes);
 		foreach ($tab_verif_mail as $key => $value) {
 			$user = $this->User_model->get_user_by_mail($value)->result_array()[0];
 			$this->load->library('User');
@@ -97,16 +102,24 @@ class Etudiant extends CI_Controller {
 			//TODO: Verif salle
 			$info = array();
 			$info['statut'] = true;
-			if($this->Rendez_vous_model->insert_rdv($data)) 
+			if(count($tab_verif_mail) <= $places_restantes_salle)
 			{
-				$info['msg'] = "Votre rendez-vous a bien été crée.</br>Les éleves/professeurs concernés ont reçus une notification.";
-				$info['statut'] &= true;
-				$idRdv = $this->db->insert_id();
-				$this->Notification_model->insertNotif($idRdv, $this->user->getIdUser()); //Envoi notif
+				if($this->Rendez_vous_model->insert_rdv($data)) 
+				{
+					$info['msg'] = "Votre rendez-vous a bien été crée.</br>Les éleves/professeurs concernés ont reçus une notification.";
+					$info['statut'] &= true;
+					$idRdv = $this->db->insert_id();
+					$this->Notification_model->insertNotif($idRdv, $this->user->getIdUser()); //Envoi notif
+				}
+				else 
+				{
+					$info['msg'] = 'Rendez-vous non crée';
+					$info['statut'] &= false;
+				}
 			}
-			else 
+			else
 			{
-				$info['msg'] = 'Rendez-vous non crée';
+				$info['msg'] = 'Rendez-vous non crée : Places inssufisantes';
 				$info['statut'] &= false;
 			}
 		}
@@ -117,6 +130,28 @@ class Etudiant extends CI_Controller {
 		$this->session->set_flashdata('create_rdv', $info);
 		redirect('Site/accueil');
 	}
+
+	public function getPlacesRestantes($Date, $HeureDebut, $idSalle )
+    {
+    	$tab_places = array();
+        $rdv = $this->Rendez_vous_model->get_rdv($idSalle, $Date, $HeureDebut)->result_array();
+
+        if(isset($rdv) && !empty($rdv))
+        {
+       		$interlocuteurs = $this->Rendez_vous_model->get_all_interlocuteur_rdv($rdv[0]['Date'], $HeureDebut, $rdv[0]['idSalle'], $rdv[0]['HeureFin']);
+       		foreach ($interlocuteurs->result_array() as $key => $rdvv) {
+	            if(!in_array($rdvv['idDemandeur'], $tab_places))
+	            {
+	                array_push($tab_places,$rdvv['idDemandeur']);
+	            }
+	            if(!in_array($rdvv['idInterlocuteur'], $tab_places))
+	            {
+	                array_push($tab_places,$rdvv['idInterlocuteur']);
+	            }
+       	 	}
+        } 
+        return $tab_places;
+    }
 
 	public function getSallesById($id)
 	{
@@ -185,7 +220,7 @@ class Etudiant extends CI_Controller {
 		if(isset($_GET['nom']) && !empty(trim($_GET['nom'])) && isset($_GET['prenom']) && !empty(trim($_GET['prenom']))
 		&& isset($_GET['mail']) && !empty(trim($_GET['mail'])) && isset($_GET['pwd']) && !empty(trim($_GET['pwd'])))
 		{
-			echo "test";
+			//echo "test";
 			$data = array(
 						'prenom'  => $_GET['prenom'],
 						'nom'     => $_GET['nom'],
@@ -203,10 +238,5 @@ class Etudiant extends CI_Controller {
 			if(isset($res) && !empty($res[0])) echo $res[0];
 			else echo 0;
 		}
-
-
 	}
-
-
-
 }

@@ -243,7 +243,7 @@ class Site extends CI_Controller {
         $this->session->sess_destroy(); // Détruit la session
         redirect(base_url()); // Redirige vers la page index
     }
-
+    // Gère aussi pour android (parametre "API" en GET)
     public function selectUser() {
         if((isset($_GET['type']) && trim($_GET['type']) == 'API') || (!(isset($_GET['type']) && trim($_GET['type']) == 'API') && (isset($_SESSION['idUser'])))) {
             $search = $_GET['search'];
@@ -399,8 +399,6 @@ class Site extends CI_Controller {
                             </tr>';
                         }
                         else $html .= '<span style="color:red">Se libère à '.$res['heure_fin'].'</span>';
-                    
-
                 }
             }
         }
@@ -556,25 +554,26 @@ class Site extends CI_Controller {
         echo '<input class="btn btn-block btn-success active " type="submit" value="Faire la demande" /><br>';
         echo '</form>';
     }
+
     public function getPlacesRestantes($Date, $HeureDebut, $idSalle )
     {
-
-        $rdv = $this->Rendez_vous_model->get_rdv($idSalle, $Date, $HeureDebut)->result_array()[0];
-
-        $interlocuteurs = $this->Rendez_vous_model->get_all_interlocuteur_rdv($rdv['Date'], $HeureDebut, $rdv['idSalle'], $rdv['HeureFin']);
-
         $tab_places = array();
+        $rdv = $this->Rendez_vous_model->get_rdv($idSalle, $Date, $HeureDebut)->result_array();
 
-        foreach ($interlocuteurs->result_array() as $key => $rdvv) {
-            if(!in_array($rdvv['idDemandeur'], $tab_places))
-            {
-                array_push($tab_places,$rdvv['idDemandeur']);
+        if(isset($rdv) && !empty($rdv))
+        {
+            $interlocuteurs = $this->Rendez_vous_model->get_all_interlocuteur_rdv($rdv[0]['Date'], $HeureDebut, $rdv[0]['idSalle'], $rdv[0]['HeureFin']);
+            foreach ($interlocuteurs->result_array() as $key => $rdvv) {
+                if(!in_array($rdvv['idDemandeur'], $tab_places))
+                {
+                    array_push($tab_places,$rdvv['idDemandeur']);
+                }
+                if(!in_array($rdvv['idInterlocuteur'], $tab_places))
+                {
+                    array_push($tab_places,$rdvv['idInterlocuteur']);
+                }
             }
-            if(!in_array($rdvv['idInterlocuteur'], $tab_places))
-            {
-                array_push($tab_places,$rdvv['idInterlocuteur']);
-            }
-        }
+        } 
         return $tab_places;
     }
 
