@@ -245,44 +245,45 @@ class Site extends CI_Controller {
     }
 
     public function selectUser() {
-        $search = $_GET['search'];
-        $this->load->database();
-        $html = "";
-        $query = $this->User_model->get_users($search);
+        if((isset($_GET['type']) && trim($_GET['type']) == 'API') || (!(isset($_GET['type']) && trim($_GET['type']) == 'API') && (isset($_SESSION['idUser'])))) {
+            $search = $_GET['search'];
+            $this->load->database();
+            $html = "";
+            $query = $this->User_model->get_users($search);
 
-        if ($query->num_rows() > 0 && !empty($search) && strlen($search) > 1) {
-            $api_data = array();
-            foreach ($query->result_array() as $key => $value) {
-                //var_dump($value);
-                $this->load->library('User', $value);
-
-                if($this->user->getIdUser() != $_SESSION['idUser'])
-                {
-                    if(isset($_GET['type']) && trim($_GET['type']) == 'API')
+            if ($query->num_rows() > 0 && !empty($search) && strlen($search) > 1) {
+                $api_data = array();
+                foreach ($query->result_array() as $key => $value) {
+                    //var_dump($value);
+                    $this->load->library('User', $value);
+                    if((isset($_SESSION['idUser']) && $this->user->getIdUser() != $_SESSION['idUser'] && !(isset($_GET['type']) && trim($_GET['type']) == 'API'))
+                        || ((isset($_GET['type']) && trim($_GET['type']) == 'API')))
                     {
-                        array_push($api_data, 
-                            array('idUser' => $this->user->getIdUser(), 'email' => $this->user->getEmail(),
-                             'nom' => $this->user->getNom(), 'prenom' => $this->user->getPrenom(), 'statut' => $this->user->getStatut()));
-                    } 
-                    else 
-                    {
-                        if($this->user->getStatut() == "etudiant") $type_btn = "primary";
-                        else if($this->user->getStatut() == "professeur") $type_btn = "warning";
-                        else if($this->user->getStatut() == "admin") $type_btn = "danger";
-                        else $type_btn = "primary";
+                        if(isset($_GET['type']) && trim($_GET['type']) == 'API')
+                        {
+                            array_push($api_data, 
+                                array('idUser' => $this->user->getIdUser(), 'email' => $this->user->getEmail(),
+                                 'nom' => $this->user->getNom(), 'prenom' => $this->user->getPrenom(), 'statut' => $this->user->getStatut()));
+                        } 
+                        else 
+                        {
+                            if($this->user->getStatut() == "etudiant") $type_btn = "primary";
+                            else if($this->user->getStatut() == "professeur") $type_btn = "warning";
+                            else if($this->user->getStatut() == "admin") $type_btn = "danger";
+                            else $type_btn = "primary";
 
-                        $html .= '<button type="button" class="btn btn-'.$type_btn.' ok" value="'.$this->user->getEmail().'" style="margin-bottom: 22px; margin-left: 3px;">' 
-                                .$this->user->getNom()." ".$this->user->getPrenom().
-                                '</button>';
+                            $html .= '<button type="button" class="btn btn-'.$type_btn.' ok" value="'.$this->user->getEmail().'" style="margin-bottom: 22px; margin-left: 3px;">' 
+                                    .$this->user->getNom()." ".$this->user->getPrenom().
+                                    '</button>';
+                        }
                     }
+                    unset($this->user);
                 }
-                unset($this->user);
+                if(isset($_GET['type']) && trim($_GET['type']) == 'API') echo json_encode($api_data);
+                else echo $html;
             }
-            //echo $html;
-            if(isset($_GET['type']) && trim($_GET['type']) == 'API') echo json_encode($api_data);
-            else echo $html;
+            $this->db->close();
         }
-        $this->db->close();
     }
 
     // Function appelé par ajax
