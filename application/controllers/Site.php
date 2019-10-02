@@ -125,7 +125,7 @@ class Site extends CI_Controller {
                 foreach($interlocuteurs->result_array() as $key2 => $value2)
                 {
                     $user = $this->User_model->get_user_by_id($value2['idInterlocuteur'])->result();
-                    echo '<a href="#"">@'.$user[0]->prenom.$user[0]->nom."</a>";
+                    if(!empty($user)) echo '<a href="#"">@'.$user[0]->prenom.$user[0]->nom."</a>";
                 }
                 echo"</td>";
                 echo "<td>".$value['Date']."</td>";
@@ -533,7 +533,7 @@ class Site extends CI_Controller {
         echo '" id="heure_fin1" value="" required="" ';
         if(isset($etat_heure_fin)) echo $etat_heure_fin;
         echo '/><br>';
-        echo '<input class="form-control searchUser" type="text" id="nom_prof" name="nom_prof" value="" placeholder="Nom du professeur et/ou nom des membres de votre groupe" required=""/><br>';
+        echo '<input class="form-control searchUser" type="text" id="nom_prof" name="nom_prof" value="" placeholder="Nom du professeur et/ou nom des membres de votre groupe" /><br>';
         echo '<input class="form-control searchUser" type="hidden" id="idProf" name="idProf" value=""/>';
         echo '<div id="result"></div>';
         echo '<div id="allow_group">';
@@ -563,12 +563,13 @@ class Site extends CI_Controller {
         if(isset($rdv) && !empty($rdv))
         {
             $interlocuteurs = $this->Rendez_vous_model->get_all_interlocuteur_rdv($rdv[0]['Date'], $HeureDebut, $rdv[0]['idSalle'], $rdv[0]['HeureFin']);
+            //var_dump($interlocuteurs->result_array() );
             foreach ($interlocuteurs->result_array() as $key => $rdvv) {
                 if(!in_array($rdvv['idDemandeur'], $tab_places))
                 {
                     array_push($tab_places,$rdvv['idDemandeur']);
                 }
-                if(!in_array($rdvv['idInterlocuteur'], $tab_places))
+                if(isset($rdvv['idInterlocuteur']) && !in_array($rdvv['idInterlocuteur'], $tab_places))
                 {
                     array_push($tab_places,$rdvv['idInterlocuteur']);
                 }

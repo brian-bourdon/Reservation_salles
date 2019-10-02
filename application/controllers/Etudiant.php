@@ -42,7 +42,8 @@ class Etudiant extends CI_Controller {
 	// Mettre dans user
 	public function demande_rdv()
 	{
-		$mails_demandeurs = explode(";", $_POST['nom_prof']);
+		if(isset($_POST['nom_prof']) && !empty($_POST['nom_prof'])) $mails_demandeurs = explode(";", $_POST['nom_prof']);
+		else $mails_demandeurs = array("");
 		$tab_verif_mail = array();
 		$now = new DateTime('now');
 		$date = new DateTime($_POST['date']);
@@ -74,23 +75,39 @@ class Etudiant extends CI_Controller {
 		echo $idSalle;
 		$personnes_presentes = $this->getPlacesRestantes($date->format('Y-m-d'), $_POST['heure_debut'], $idSalle);
         $places_restantes_salle = $capacite - count($personnes_presentes);
-		foreach ($tab_verif_mail as $key => $value) {
-			$user = $this->User_model->get_user_by_mail($value)->result_array()[0];
-			$this->load->library('User');
 
-			$this->user->setIdUser($user['idUser']);
-			$this->user->setEmail($user['email']);
-			$this->user->setNom($user['nom']);
-			$this->user->setPrenom($user['prenom']);
-			$this->user->setPwd($user['pwd']);
-			$this->user->setStatut($user['statut']);
+        if(empty($tab_verif_mail)) 
+        {
+        	array_push($tab_verif_mail, "nothing");
+        }
+
+        
+
+		foreach ($tab_verif_mail as $key => $value) {
+			if($value != "nothing")
+			{
+				$user = $this->User_model->get_user_by_mail($value)->result_array()[0];
+				$this->load->library('User');
+
+				$this->user->setIdUser($user['idUser']);
+				$this->user->setEmail($user['email']);
+				$this->user->setNom($user['nom']);
+				$this->user->setPrenom($user['prenom']);
+				$this->user->setPwd($user['pwd']);
+				$this->user->setStatut($user['statut']);
+				$idInterlocuteur = $this->user->getIdUser();
+			}
+			else {
+				$idInterlocuteur = NULL;
+			}
+
 
 			if($_POST['heure_fin'] == "00:00") $heure_fin = "23:59";
 			else $heure_fin = $_POST["heure_fin"];
 
 			$data = array(
 					'idDemandeur'	=> $this->session->userdata('idUser'),
-					'idInterlocuteur'  => $this->user->getIdUser(),
+					'idInterlocuteur'  => $idInterlocuteur,
 					'Date'		=> $date->format('Y-m-d'),
 					'HeureDebut'     => $_POST['heure_debut'],
 					'HeureFin'		=> $heure_fin,
@@ -98,6 +115,7 @@ class Etudiant extends CI_Controller {
 					'idSalle' => $idSalle,
 					'AllowGroups' => $allow_other_group
 			);
+			if($value == "nothing") $data['statut'] = "accepted";
 
 			//TODO: Verif salle
 			$info = array();
@@ -106,10 +124,11 @@ class Etudiant extends CI_Controller {
 			{
 				if($this->Rendez_vous_model->insert_rdv($data)) 
 				{
-					$info['msg'] = "Votre rendez-vous a bien été crée.</br>Les éleves/professeurs concernés ont reçus une notification.";
+					if($value != "nothing") $info['msg'] = "Votre rendez-vous a bien été crée.</br>Les éleves/professeurs concernés ont reçus une notification.";
+					else $info['msg'] = "Votre rendez-vous a bien été crée.";
 					$info['statut'] &= true;
 					$idRdv = $this->db->insert_id();
-					$this->Notification_model->insertNotif($idRdv, $this->user->getIdUser()); //Envoi notif
+					if($value != "nothing") $this->Notification_model->insertNotif($idRdv, $this->user->getIdUser()); //Envoi notif
 				}
 				else 
 				{
@@ -144,7 +163,7 @@ class Etudiant extends CI_Controller {
 	            {
 	                array_push($tab_places,$rdvv['idDemandeur']);
 	            }
-	            if(!in_array($rdvv['idInterlocuteur'], $tab_places))
+	            if(isset($rdvv['idInterlocuteur']) && !in_array($rdvv['idInterlocuteur'], $tab_places))
 	            {
 	                array_push($tab_places,$rdvv['idInterlocuteur']);
 	            }
