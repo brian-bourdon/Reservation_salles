@@ -251,22 +251,36 @@ class Site extends CI_Controller {
         $query = $this->User_model->get_users($search);
 
         if ($query->num_rows() > 0 && !empty($search) && strlen($search) > 1) {
-            $this->load->library('User', $query->result_array()[0]);
-            
-            if($this->user->getStatut() == "etudiant") $type_btn = "primary";
-            else if($this->user->getStatut() == "professeur") $type_btn = "warning";
-            else if($this->user->getStatut() == "admin") $type_btn = "danger";
-            else $type_btn = "primary";
-
+            $api_data = array();
             foreach ($query->result_array() as $key => $value) {
+                //var_dump($value);
+                $this->load->library('User', $value);
+
                 if($this->user->getIdUser() != $_SESSION['idUser'])
                 {
-                    $html .= '<button type="button" class="btn btn-'.$type_btn.' ok" value="'.$this->user->getEmail().'" style="margin-bottom: 22px;">' 
-                            .$this->user->getNom()." ".$this->user->getPrenom().
-                            '</button>';
+                    if(isset($_GET['type']) && trim($_GET['type']) == 'API')
+                    {
+                        array_push($api_data, 
+                            array('idUser' => $this->user->getIdUser(), 'email' => $this->user->getEmail(),
+                             'nom' => $this->user->getNom(), 'prenom' => $this->user->getPrenom(), 'statut' => $this->user->getStatut()));
+                    } 
+                    else 
+                    {
+                        if($this->user->getStatut() == "etudiant") $type_btn = "primary";
+                        else if($this->user->getStatut() == "professeur") $type_btn = "warning";
+                        else if($this->user->getStatut() == "admin") $type_btn = "danger";
+                        else $type_btn = "primary";
+
+                        $html .= '<button type="button" class="btn btn-'.$type_btn.' ok" value="'.$this->user->getEmail().'" style="margin-bottom: 22px; margin-left: 3px;">' 
+                                .$this->user->getNom()." ".$this->user->getPrenom().
+                                '</button>';
+                    }
                 }
+                unset($this->user);
             }
-            echo $html;
+            //echo $html;
+            if(isset($_GET['type']) && trim($_GET['type']) == 'API') echo json_encode($api_data);
+            else echo $html;
         }
         $this->db->close();
     }
@@ -589,6 +603,7 @@ class Site extends CI_Controller {
             $this->load->database();
 
             $query = $this->User_model->get_user_by_mail(trim($_GET['email']));
+
             if ($query->num_rows() >= 1) {
 
                 $this->load->library('User', $query->result_array()[0]);
@@ -614,5 +629,6 @@ class Site extends CI_Controller {
             $this->db->close();
         }
     }
+
 }
 ?>
