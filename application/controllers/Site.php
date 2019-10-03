@@ -172,7 +172,7 @@ class Site extends CI_Controller {
                 foreach($interlocuteurs->result_array() as $key2 => $value2)
                 {
                     $user = $this->User_model->get_user_by_id($value2['idInterlocuteur'])->result();
-                    echo '<a href="#"">@'.$user[0]->prenom.$user[0]->nom."</a>";
+                    if(!empty($user)) echo '<a href="#"">@'.$user[0]->prenom.$user[0]->nom."</a>";
                 }
                 echo"</td>";
                 echo "<td>".$value['Date']."</td>";
@@ -389,16 +389,16 @@ class Site extends CI_Controller {
                 }
                 else
                 {
-                        if(explode(':',$real_heure_debut)[0] < explode(':', $res['heure_debut'])[0])
-                        {
-                            $value_json['statut'] = "libre";
-                            $html .= '<button class="btn btn-success demande_rdv" value="' . $value['titre'] . '/' . $real_date . '/' . $real_heure_debut . '">
-                                    <i class="fa fa-play"></i> Réserver
-                                </button>
-                                </td>
-                            </tr>';
-                        }
-                        else $html .= '<span style="color:red">Se libère à '.$res['heure_fin'].'</span>';
+                    if(explode(':',$real_heure_debut)[0] < explode(':', $res['heure_debut'])[0])
+                    {
+                        $value_json['statut'] = "libre";
+                        $html .= '<button class="btn btn-success demande_rdv" value="' . $value['titre'] . '/' . $real_date . '/' . $real_heure_debut . '">
+                                <i class="fa fa-play"></i> Réserver
+                            </button>
+                            </td>
+                        </tr>';
+                    }
+                    else $html .= '<span style="color:red">Se libère à '.$res['heure_fin'].'</span>';
                 }
             }
         }
@@ -551,7 +551,7 @@ class Site extends CI_Controller {
         echo '</div>';
         echo '<div id="membre" class="form-check form-check-inline">';    
         echo '</div>';
-        echo '<input class="btn btn-block btn-success active " type="submit" value="Faire la demande" /><br>';
+        echo '<input class="btn btn-block btn-success active " type="submit" value="Faire la demande" id="demande_rdv" /><br>';
         echo '</form>';
     }
 
