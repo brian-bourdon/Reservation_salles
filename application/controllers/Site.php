@@ -485,7 +485,7 @@ class Site extends CI_Controller {
                 <div class="card">
                 <div class="card-header" id="headingOne">
                 <h5 class="mb-0">
-                <button class="btn btn-link" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                <button class="btn btn-link disabled" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne" style="color: blue;">
                   Personnes présentes | Reste '.$places_restantes_salle.' places
                 </button>
               </h5>
@@ -629,7 +629,7 @@ class Site extends CI_Controller {
             }
             $this->db->close();
         }
+        else echo "BAD_IDENTIFIERS";
     }
-
 }
 ?>
