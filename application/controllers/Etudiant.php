@@ -42,19 +42,42 @@ class Etudiant extends CI_Controller {
 	// Mettre dans user
 	public function demande_rdv()
 	{
-		if(isset($_POST['nom_prof']) && !empty($_POST['nom_prof'])) $mails_demandeurs = explode(";", $_POST['nom_prof']);
-		else $mails_demandeurs = array("");
-		$tab_verif_mail = array();
-		$now = new DateTime('now');
-		$date = new DateTime($_POST['date']);
-		if(isset($_POST['value_check_allow_group'])) $allow_other_group = $_POST['value_check_allow_group'];
-		else
-		{
-			if(isset($_POST['allow_other_group']) && $_POST['allow_other_group']) $allow_other_group = $_POST['allow_other_group'];
+		if(isset($_GET['API']) && $_GET['API'] == true) {
+			if(isset($_GET['nom_prof']) && !empty($_GET['nom_prof'])) $mails_demandeurs = explode(";", $_GET['nom_prof']);
+			else $mails_demandeurs = array("");
+
+			if(isset($_GET['allow_other_group']) && $_GET['allow_other_group']) $allow_other_group = $_GET['allow_other_group'];
 			else $allow_other_group = "false";
+			
+			if(isset($_GET['salle']) && $_GET['salle']) $num_salle = $_GET['salle'];
+			if(isset($_GET['date']) && $_GET['date']) $date = new DateTime($_GET['date']);
+			if(isset($_GET['heure_debut']) && $_GET['heure_debut']) $heure_debut = $_GET['heure_debut'];
+			if(isset($_GET['heure_fin']) && $_GET['heure_fin']) $heure_fin = $_GET['heure_fin'];
+			if(isset($_GET['idDemandeur']) && $_GET['idDemandeur']) $idDemandeur = $_GET['idDemandeur'];
+			else $idDemandeur = $this->session->userdata('idUser');
+		}
+		else 
+		{
+			if(isset($_POST['nom_prof']) && !empty($_POST['nom_prof'])) $mails_demandeurs = explode(";", $_POST['nom_prof']);
+			else $mails_demandeurs = array("");
+			if(isset($_POST['value_check_allow_group'])) $allow_other_group = $_POST['value_check_allow_group'];
+			else
+			{
+				if(isset($_POST['allow_other_group']) && $_POST['allow_other_group']) $allow_other_group = $_POST['allow_other_group'];
+				else $allow_other_group = "false";
+			}
+			if(isset($_POST['salle']) && $_POST['salle']) $num_salle = $_POST['salle'];
+			if(isset($_POST['date']) && $_POST['date']) $date = new DateTime($_POST['date']);
+			if(isset($_POST['heure_debut']) && $_POST['heure_debut']) $heure_debut = $_POST['heure_debut'];
+			if(isset($_POST['heure_fin']) && $_POST['heure_fin']) $heure_fin = $_POST['heure_fin'];
+			$idDemandeur = $this->session->userdata('idUser');
+
 		}
 
-		$salle = $this->Salle_model->getSalleByNumSalles($_POST['salle']);
+		$tab_verif_mail = array();
+		$now = new DateTime('now');
+
+		$salle = $this->Salle_model->getSalleByNumSalles($num_salle);
 		$idSalle = "";
 		if ($salle->num_rows() == 1) {
 			$idSalle = $salle->result_array()[0]['idSalle'];
@@ -64,16 +87,14 @@ class Etudiant extends CI_Controller {
 		foreach ($mails_demandeurs as $key => $mail) {
 			if(!empty(trim($mail)))
 			{
-				if(!in_array(trim($mail), $tab_verif_mail))
+				if(!in_array(trim($mail), $tab_verif_mail) && $mail != $this->User_model->get_user_by_id($idDemandeur)->result_array()[0]['email'])
 				{
 					array_push($tab_verif_mail, trim($mail));
 				}
 			}
 		}
-		echo $date->format('Y-m-d');
-		echo "</br>".$_POST['heure_debut']."</br>";
-		echo $idSalle;
-		$personnes_presentes = $this->getPlacesRestantes($date->format('Y-m-d'), $_POST['heure_debut'], $idSalle);
+
+		$personnes_presentes = $this->getPlacesRestantes($date->format('Y-m-d'), $heure_debut, $idSalle);
         $places_restantes_salle = $capacite - count($personnes_presentes);
 
         if(empty($tab_verif_mail)) 
@@ -81,44 +102,40 @@ class Etudiant extends CI_Controller {
         	array_push($tab_verif_mail, "nothing");
         }
 
-        
-
 		foreach ($tab_verif_mail as $key => $value) {
 			if($value != "nothing")
 			{
-				$user = $this->User_model->get_user_by_mail($value)->result_array()[0];
-				$this->load->library('User');
+				if($user = $this->User_model->get_user_by_mail($value)->result_array()[0]) {
+					$this->load->library('User');
 
-				$this->user->setIdUser($user['idUser']);
-				$this->user->setEmail($user['email']);
-				$this->user->setNom($user['nom']);
-				$this->user->setPrenom($user['prenom']);
-				$this->user->setPwd($user['pwd']);
-				$this->user->setStatut($user['statut']);
-				$idInterlocuteur = $this->user->getIdUser();
+					$this->user->setIdUser($user['idUser']);
+					$this->user->setEmail($user['email']);
+					$this->user->setNom($user['nom']);
+					$this->user->setPrenom($user['prenom']);
+					$this->user->setPwd($user['pwd']);
+					$this->user->setStatut($user['statut']);
+					$idInterlocuteur = $this->user->getIdUser();
+				}
 			}
 			else {
 				$idInterlocuteur = NULL;
 				$allow_other_group = true;
 			}
 
-
-			if($_POST['heure_fin'] == "00:00") $heure_fin = "23:59";
-			else $heure_fin = $_POST["heure_fin"];
+			if($heure_fin == "00:00") $heure_fin = "23:59";
 
 			$data = array(
-					'idDemandeur'	=> $this->session->userdata('idUser'),
+					'idDemandeur'	=> $idDemandeur,
 					'idInterlocuteur'  => $idInterlocuteur,
 					'Date'		=> $date->format('Y-m-d'),
-					'HeureDebut'     => $_POST['heure_debut'],
+					'HeureDebut'     => $heure_debut,
 					'HeureFin'		=> $heure_fin,
-					'titre'	  => $_POST['salle'],
+					'titre'	  => $num_salle,
 					'idSalle' => $idSalle,
 					'AllowGroups' => $allow_other_group
 			);
 			if($value == "nothing") $data['statut'] = "accepted";
 
-			//TODO: Verif salle
 			$info = array();
 			$info['statut'] = true;
 			if(count($tab_verif_mail) <= $places_restantes_salle)
@@ -144,11 +161,17 @@ class Etudiant extends CI_Controller {
 			}
 		}
 
-		if($info['statut']) $info['statut'] = "success";
-		else $info['statut'] = "danger";
+		if(isset($_GET['API']) && $_GET['API'] == true) {
+			echo $info['statut'];
+		}
+		else
+		{
+			if($info['statut']) $info['statut'] = "success";
+			else $info['statut'] = "danger";
 
-		$this->session->set_flashdata('create_rdv', $info);
-		redirect('Site/accueil');
+			$this->session->set_flashdata('create_rdv', $info);
+			redirect('Site/accueil');
+		}
 	}
 
 	public function getPlacesRestantes($Date, $HeureDebut, $idSalle )
