@@ -121,8 +121,8 @@ class Etudiant extends CI_Controller {
 				$idInterlocuteur = $idDemandeur;
 				$allow_other_group = true;
 			}
-
-			if($heure_fin == "00:00") $heure_fin = "23:59";
+			$verif_heure_fin = new DateTime($heure_fin);
+			if($verif_heure_fin->format('H:i') == "00:00") $heure_fin = "23:59";
 
 			$data = array(
 					'idDemandeur'	=> $idDemandeur,
