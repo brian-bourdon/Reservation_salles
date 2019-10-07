@@ -87,11 +87,10 @@ class Rendez_vous_model extends CI_Model
                         ->get();
     }
 
-    public function get_interlocuteur_rdv($idDemandeur, $Date, $HeureDebut, $idSalle) // enlevé id demandeur
+    public function get_interlocuteur_rdv($Date, $HeureDebut, $idSalle) // enlevé id demandeur
     {
                 return $this->db->select('idInterlocuteur')
                         ->from($this->table)
-                        ->where('idDemandeur', $idDemandeur)
                         ->where('Date', $Date)
                         ->where('HeureDebut', $HeureDebut)
                         ->where('idSalle', $idSalle)

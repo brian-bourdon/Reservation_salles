@@ -118,7 +118,7 @@ class Etudiant extends CI_Controller {
 				}
 			}
 			else {
-				$idInterlocuteur = NULL;
+				$idInterlocuteur = $idDemandeur;
 				$allow_other_group = true;
 			}
 

@@ -62,7 +62,7 @@ class Site extends CI_Controller {
                 $rdv = $rdv_query->result_array()[0];
                 if($rdv['statut'] == "waiting")
                 {
-                    $interlocuteurs = $this->Rendez_vous_model->get_interlocuteur_rdv($rdv['idDemandeur'], $rdv['Date'], $rdv['HeureDebut'], $rdv['idSalle']);
+                    $interlocuteurs = $this->Rendez_vous_model->get_interlocuteur_rdv($rdv['Date'], $rdv['HeureDebut'], $rdv['idSalle']);
                     echo "<tr class='notifs'>";
                     echo "<th scope='row'>".$rdv['titre']."</th>";
                     echo "<td>";
@@ -93,7 +93,6 @@ class Site extends CI_Controller {
     {
         $mes_rdv = $this->Rendez_vous_model->get_rdv_for_user($_SESSION['idUser'])->result_array();
 
-
         echo '<div class="tab-content tab_rdv">';
         echo '<div id="home" class="tab-pane fade in active show">';
         echo '<table class="table table-hover ">';
@@ -120,8 +119,8 @@ class Site extends CI_Controller {
                 echo "<th scope='row'>".$titre_salle->titre."</th>";
                 echo "<td><a href='#'>@".$demandeur['nom'].$demandeur['prenom']."</a></td>";
                 echo "<td>";
-                $interlocuteurs = $this->Rendez_vous_model->get_interlocuteur_rdv($value['idDemandeur'], $value['Date'], $value['HeureDebut'], $value['idSalle']);
-
+                $interlocuteurs = $this->Rendez_vous_model->get_interlocuteur_rdv($value['Date'], $value['HeureDebut'], $value['idSalle']);
+                //var_dump($interlocuteurs->result_array());
                 foreach($interlocuteurs->result_array() as $key2 => $value2)
                 {
                     $user = $this->User_model->get_user_by_id($value2['idInterlocuteur'])->result();
@@ -167,7 +166,7 @@ class Site extends CI_Controller {
                 echo "<th scope='row'>".$titre_salle->titre."</th>";
                 echo "<td><a href='#'>@".$demandeur['nom'].$demandeur['prenom']."</a></td>";
                 echo "<td>";
-                $interlocuteurs = $this->Rendez_vous_model->get_interlocuteur_rdv($value['idDemandeur'], $value['Date'], $value['HeureDebut'], $value['idSalle']);
+                $interlocuteurs = $this->Rendez_vous_model->get_interlocuteur_rdv($value['Date'], $value['HeureDebut'], $value['idSalle']);
 
                 foreach($interlocuteurs->result_array() as $key2 => $value2)
                 {
