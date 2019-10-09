@@ -196,21 +196,6 @@ class Etudiant extends CI_Controller {
         return $tab_places;
     }
 
-	public function getSallesById($id)
-	{
-		$data = array(
-					'prenom'  => $prenom,
-					'nom'     => $nom,
-					'email'	  => $email,
-					'pwd'  => $pwd,
-					'statut'  => 'etudiant'
-		);
-		
-		$test = $this->User_model->insert_user($this->user);
-		
-		redirect('');	
-	}
-
 	public function notif_accepted()
 	{
 		$res = true;

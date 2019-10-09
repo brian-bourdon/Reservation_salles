@@ -360,8 +360,48 @@ class Site extends CI_Controller {
                        	<th scope="row">' . $value['titre'] . '</th>
                         <td>' . $real_date . '</td>
                         <td>' . $real_heure_debut  . '</td>
-                        <td>'.$value['capacite'].'</td>
-                        <td>';
+                        <td>'.$value['capacite'].'</td>';
+           
+            $heure_fin_false = new DateTime($real_heure_debut);
+            $heure_fin_false->modify("+ 1 hour");
+            if($heure_fin_false->format('H:00') == "00:00") $heure_fin_false->modify('- 1 minutes');
+
+            /*var_dump($real_date_obj->format('Y-m-d'));
+            var_dump($real_heure_debut);
+            var_dump($value['idSalle']);
+            var_dump($heure_fin_false->format("H:i"));*/
+
+            $personnes = $this->Rendez_vous_model->get_all_interlocuteur_rdv($real_date_obj->format('Y-m-d'), $real_heure_debut, $value['idSalle'], $heure_fin_false->format("H:i"))->result_array();
+            if($this->session->userdata('statut') == "professeur" || $this->session->userdata('statut') == "admin") {
+                $html .= '<td>';
+                $tab_verif = array();
+                if($personnes != array()) {
+                    foreach ($personnes as $key => $value3) {
+                        if(!in_array($value3['idInterlocuteur'], $tab_verif)) {
+                            array_push($tab_verif, $value3['idInterlocuteur']);
+                            //$user = $this->User_model->get_user_by_id($value)->result_array()[0];
+                            //$html .= '@'.$user['prenom'].$user['nom'];
+                        }
+                        if(!in_array($value3['idDemandeur'], $tab_verif)) {
+                            array_push($tab_verif, $value3['idDemandeur']);
+                        }
+                    }
+                    foreach ($tab_verif as $key => $value4) {
+                        $user = $this->User_model->get_user_by_id($value4)->result_array()[0];
+
+                        $this->load->library('User', $user);
+                        if($this->user->getStatut() == "etudiant") $color = "blue";
+                        else if($this->user->getStatut() == "professeur") $color = "orange";
+                        else if($this->user->getStatut() == "admin") $color = "red";
+                        else $color = "blue";
+                        $html .= "<span style='color:".$color."'>@".$this->user->getNom().$this->user->getPrenom()."</span></br>";
+                        unset($this->user);
+                    }
+                }
+                $html .= "</td>";
+            }
+
+            $html .= '<td>';
 
             //echo "test ".$this->_isAvailable($value['titre'], $real_date_obj->format('Y-m-d'), $real_heure_debut);
             $data = $this->_isAvailable($value['titre'], $real_date_obj->format('Y-m-d'), $real_heure_debut);

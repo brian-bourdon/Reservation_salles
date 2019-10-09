@@ -126,9 +126,6 @@ class Rendez_vous_model extends CI_Model
         return $this->db->delete($this->table);
     }
 
-
-
-
 }
 
 
