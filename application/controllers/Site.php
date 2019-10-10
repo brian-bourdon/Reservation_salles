@@ -54,7 +54,18 @@ class Site extends CI_Controller {
 
     public function reload_notif()
     {
-        $notif = $this->Notification_model->get_notif_by_user($_SESSION['idUser'])->result_array();
+        if(isset($_GET['API']) && $_GET['API']) {
+            if(isset($_GET['idUser']) && !empty($_GET['idUser'])) $idUser = $_GET['idUser'];
+            else {
+                echo 0;
+                return 0;
+            }
+        }
+        else $idUser = $_SESSION['idUser'];
+
+        $notif = $this->Notification_model->get_notif_by_user($idUser)->result_array();
+        $html = "";
+        $all_notif_api = array();
         foreach ($notif as $key => $value) {
             $rdv_query = $this->Rendez_vous_model->get_rdv_by_id($value['idRdv']);
             if($rdv_query->num_rows() == 1)
@@ -62,14 +73,20 @@ class Site extends CI_Controller {
                 $rdv = $rdv_query->result_array()[0];
                 if($rdv['statut'] == "waiting")
                 {
+                    $notif_api = array();
                     $interlocuteurs = $this->Rendez_vous_model->get_interlocuteur_rdv($rdv['Date'], $rdv['HeureDebut'], $rdv['idSalle']);
-                    echo "<tr class='notifs'>";
-                    echo "<th scope='row'>".$rdv['titre']."</th>";
-                    echo "<td>";
+                    $html .= "<tr class='notifs'>";
+                    $html .= "<th scope='row'>".$rdv['titre']."</th>";
+                    $html .= "<td>";
                     $user = $this->User_model->get_user_by_id($rdv['idDemandeur'])->result_array();
-                    echo '<a href="#">@'.$user[0]['prenom'].$user[0]['nom'].'</a>';
-                    echo "</td>";
-                    echo "<td>";
+                    $html .= '<a href="#">@'.$user[0]['prenom'].$user[0]['nom'].'</a>';
+                    $html .= "</td>";
+                    $html .= "<td>";
+
+                    $notif_api['salle'] = $rdv['titre'];
+                    $notif_api['createur_groupe'] = '@'.$user[0]['prenom'].$user[0]['nom'];
+                    $notif_api['membres'] = "";
+
                     $tab_verif = array();
                     foreach($interlocuteurs->result_array() as $key2 => $value2)
                     {
@@ -79,23 +96,33 @@ class Site extends CI_Controller {
                     }
                     foreach ($tab_verif as $key_real => $value_real) {
                         $user = $this->User_model->get_user_by_id($value_real)->result();
-                        echo '<a href="#">@'.$user[0]->prenom.$user[0]->nom."</a>";
+                        $html .= '<a href="#">@'.$user[0]->prenom.$user[0]->nom."</a>";
+                        $notif_api['membres'] .= '@'.$user[0]->prenom.$user[0]->nom.';';
                     }
-                    echo "</td>";
-                    echo "<td>".$rdv['Date']."</td>";
-                    echo "<td>".$rdv['HeureDebut']."</td>";
-                    echo "<td>";
+                    $html .= "</td>";
+                    $html .= "<td>".$rdv['Date']."</td>";
+                    $html .= "<td>".$rdv['HeureDebut']."</td>";
+                    $html .= "<td>";
                     /*echo "<button id='accepted_notif' onclick=\"window.location.href='".base_url('Etudiant/notif_accepted')."?id=".$value['idNotif']."&idRdv=".$value['idRdv']."'\" class='btn btn-success'> <i class='fa fa-play'></i> oui </button>";
                     echo "<button id='refused_notif' onclick=\"window.location.href='".base_url('Etudiant/notif_refused')."?id=".$value['idNotif']."&idRdv=".$value['idRdv']."'\" class='btn btn-danger' > <i class='fa fa-stop'></i> non </button>";*/
-                    echo "<button id='accepted_notif' class='btn btn-success' > <i class='fa fa-play'></i> oui </button>";
-                    echo "<button id='refused_notif' class='btn btn-danger' > <i class='fa fa-stop'></i> non </button>";
-                    echo "<input type='hidden' id='idNotif' value='".$value['idNotif']."'/>";
-                    echo "<input type='hidden' id='idRdv' value='".$value['idRdv']."'/>";
+                    $html .= "<button id='accepted_notif' class='btn btn-success' > <i class='fa fa-play'></i> oui </button>";
+                    $html .= "<button id='refused_notif' class='btn btn-danger' > <i class='fa fa-stop'></i> non </button>";
+                    $html .= "<input type='hidden' id='idNotif' value='".$value['idNotif']."'/>";
+                    $html .= "<input type='hidden' id='idRdv' value='".$value['idRdv']."'/>";
 
-                    echo "</td>";
-                    echo "</tr>";
+                    $html .= "</td>";
+                    $html .= "</tr>";
+
+                    $notif_api['Date'] = $rdv['Date'];
+                    $notif_api['HeureDebut'] = $rdv['HeureDebut'];
+                    array_push($all_notif_api, $notif_api);
                 }
             }
+        }
+        if(isset($_GET['API']) && $_GET['API']) {
+            echo json_encode($all_notif_api);
+        } else {
+            echo $html;
         }
     }
 
