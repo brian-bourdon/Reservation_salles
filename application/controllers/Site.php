@@ -101,25 +101,36 @@ class Site extends CI_Controller {
 
     public function load_rdv()
     {
-        $mes_rdv = $this->Rendez_vous_model->get_rdv_for_user($_SESSION['idUser'])->result_array();
+        if(isset($_GET['API']) && $_GET['API']) {
+            if(isset($_GET['idUser'])) $idUser = $_GET['idUser'];
+            else {
+                echo 0;
+                return 0;
+            }
+        }
+        else $idUser = $_SESSION['idUser'];
 
-        echo '<div class="tab-content tab_rdv">';
-        echo '<div id="home" class="tab-pane fade in active show">';
-        echo '<table class="table table-hover ">';
-        echo '<thead>';
-        echo '<tr>';
-        echo '<th scope="col">Numéro de salle</th>';
-        echo '<th scope="col">Créateur du groupe</th>';
-        echo '<th scope="col">Membres du groupe</th>';
-        echo '<th scope="col">Date</th>';
-        echo '<th scope="col">Heure de début</th>';
-        echo '<th scope="col">Heure de Fin</th>';
-        echo '<th scope="col" class="">Action </th>';
-        echo '</tr>';
-        echo '</thead>';
-        echo '<tbody>';
+        $mes_rdv = $this->Rendez_vous_model->get_rdv_for_user($idUser)->result_array();
+        $html = "";
+        $html .= '<div class="tab-content tab_rdv">';
+        $html .= '<div id="home" class="tab-pane fade in active show">';
+        $html .= '<table class="table table-hover ">';
+        $html .= '<thead>';
+        $html .= '<tr>';
+        $html .= '<th scope="col">Numéro de salle</th>';
+        $html .= '<th scope="col">Créateur du groupe</th>';
+        $html .= '<th scope="col">Membres du groupe</th>';
+        $html .= '<th scope="col">Date</th>';
+        $html .= '<th scope="col">Heure de début</th>';
+        $html .= '<th scope="col">Heure de Fin</th>';
+        $html .= '<th scope="col" class="">Action </th>';
+        $html .= '</tr>';
+        $html .= '</thead>';
+        $html .= '<tbody>';
+        $all_rdv_a_venir = array();
         foreach($mes_rdv as $key => $value)
         {
+            $rdv_a_venir = array();
             $mes_rdv_real = $this->Rendez_vous_model->get_rdv($value['idSalle'], $value['Date'], $value['HeureDebut'])->row();
             if(isset($mes_rdv_real)) $demandeur = $this->User_model->get_user_by_id($mes_rdv_real->idDemandeur)->result_array()[0];
 
@@ -128,45 +139,57 @@ class Site extends CI_Controller {
 
             if($datetime->format('Y-m-d H:i:s') >= date('Y-m-d H:i:s'))
             {
-                echo "<tr class='rdv_value'>";
-                echo "<th scope='row'>".$titre_salle->titre."</th>";
-                echo "<td><a href='#'>@".$demandeur['prenom'].$demandeur['nom']."</a></td>";
-                echo "<td>";
+                $html .= "<tr class='rdv_value'>";
+                $html .= "<th scope='row'>".$titre_salle->titre."</th>";
+                $rdv_a_venir['salle'] = $titre_salle->titre;
+                $html .= "<td><a href='#'>@".$demandeur['prenom'].$demandeur['nom']."</a></td>";
+                $rdv_a_venir['demandeur'] = "@".$demandeur['prenom'].$demandeur['nom'];
+                $html .= "<td>";
                 $interlocuteurs = $this->Rendez_vous_model->get_interlocuteur_rdv($value['Date'], $value['HeureDebut'], $value['idSalle']);
                 //var_dump($interlocuteurs->result_array());
+                $rdv_a_venir['membres'] = "";
                 foreach($interlocuteurs->result_array() as $key2 => $value2)
                 {
                     if($value2['idInterlocuteur'] != $mes_rdv_real->idDemandeur) $user = $this->User_model->get_user_by_id($value2['idInterlocuteur'])->result();
-                    if(isset($user) && !empty($user)) echo '<a href="#"">@'.$user[0]->prenom.$user[0]->nom."</a>";
+                    if(isset($user) && !empty($user)) {
+                        $html .= '<a href="#"">@'.$user[0]->prenom.$user[0]->nom."</a>";
+                        $rdv_a_venir['membres'] .= '@'.$user[0]->prenom.$user[0]->nom.";";
+                    }
                 }
-                echo"</td>";
-                echo "<td>".$value['Date']."</td>";
-                echo "<td>".$value['HeureDebut']."</td>";
-                echo "<td>".$value['HeureFin']."</td>";
-                echo "<td>";
-                echo "<a href='".base_url('Etudiant/annuler_rdv?date='.$value['Date'].'&heure_debut='.$value['HeureDebut'].'&idSalle='.$value['idSalle'].'&idInterlocuteur='.$_SESSION['idUser'])."'><button class='btn btn-danger'> <i class='fa fa-stop'></i> Annuler </button></a>";
+                $rdv_a_venir['date'] = $value['Date'];
+                $rdv_a_venir['HeureDebut'] = $value['HeureDebut'];
+                $rdv_a_venir['HeureFin'] = $value['HeureFin'];
+                array_push($all_rdv_a_venir, $rdv_a_venir);
 
-                echo "</td>";
-                echo "</tr>";
+                $html .= "</td>";
+                $html .= "<td>".$value['Date']."</td>";
+                $html .= "<td>".$value['HeureDebut']."</td>";
+                $html .= "<td>".$value['HeureFin']."</td>";
+                $html .= "<td>";
+                $html .= "<a href='".base_url('Etudiant/annuler_rdv?date='.$value['Date'].'&heure_debut='.$value['HeureDebut'].'&idSalle='.$value['idSalle'].'&idInterlocuteur='.$_SESSION['idUser'])."'><button class='btn btn-danger'> <i class='fa fa-stop'></i> Annuler </button></a>";
+
+                $html .= "</td>";
+                $html .= "</tr>";
             }
         }
-        echo '</tbody>';
-        echo'</table>';
-        echo '</div>';
-        echo '<div id="menu1" class="tab-pane fade">';
-        echo '<table class="table table-hover tab_rdv">';
-        echo '<thead>';
-        echo '<tr>';
-        echo '<th scope="col">Numéro de salle</th>';
-        echo '<th scope="col">Créateur du groupe</th>';
-        echo '<th scope="col">Membres du groupe</th>';
-        echo '<th scope="col">Date</th>';
-        echo '<th scope="col">Heure de début</th>';
-        echo '<th scope="col">Heure de Fin</th>';
+        $html .= '</tbody>';
+        $html .='</table>';
+        $html .= '</div>';
+        $html .= '<div id="menu1" class="tab-pane fade">';
+        $html .= '<table class="table table-hover tab_rdv">';
+        $html .= '<thead>';
+        $html .= '<tr>';
+        $html .= '<th scope="col">Numéro de salle</th>';
+        $html .= '<th scope="col">Créateur du groupe</th>';
+        $html .= '<th scope="col">Membres du groupe</th>';
+        $html .= '<th scope="col">Date</th>';
+        $html .= '<th scope="col">Heure de début</th>';
+        $html .= '<th scope="col">Heure de Fin</th>';
         //echo '<th scope="col" class="">Action </th>';
-        echo '</tr>';
-        echo '</thead>';
-        echo '<tbody>';
+        $html .= '</tr>';
+        $html .= '</thead>';
+        $html .= '<tbody>';
+        $all_rdv_passee = array();
         foreach($mes_rdv as $key => $value)
         {
             $mes_rdv_real = $this->Rendez_vous_model->get_rdv($value['idSalle'], $value['Date'], $value['HeureDebut'])->row();
@@ -177,32 +200,52 @@ class Site extends CI_Controller {
 
             if($datetime->format('Y-m-d H:i:s') < date('Y-m-d H:i:s') /*|| ($value['Date'] == date('Y-m-d') && date('H:i:s') > $value['HeureDebut'])*/)
             {
-                echo "<tr class='rdv_value'>";
-                echo "<th scope='row'>".$titre_salle->titre."</th>";
-                echo "<td><a href='#'>@".$demandeur['prenom'].$demandeur['nom']."</a></td>";
-                echo "<td>";
+                $html .= "<tr class='rdv_value'>";
+                $html .= "<th scope='row'>".$titre_salle->titre."</th>";
+                $rdv_passee['salle'] = $titre_salle->titre;
+                $html .= "<td><a href='#'>@".$demandeur['prenom'].$demandeur['nom']."</a></td>";
+                $rdv_passee['demandeur'] = "@".$demandeur['prenom'].$demandeur['nom'];
+                $html .= "<td>";
                 $interlocuteurs = $this->Rendez_vous_model->get_interlocuteur_rdv($value['Date'], $value['HeureDebut'], $value['idSalle']);
-
+                $rdv_passee['membres'] = "";
                 foreach($interlocuteurs->result_array() as $key2 => $value2)
                 {
                     if($value2['idInterlocuteur'] != $mes_rdv_real->idDemandeur) $user = $this->User_model->get_user_by_id($value2['idInterlocuteur'])->result();
-                    if(isset($user) && !empty($user)) echo '<a href="#"">@'.$user[0]->prenom.$user[0]->nom."</a>";
+                    if(isset($user) && !empty($user)) {
+                        $html .= '<a href="#"">@'.$user[0]->prenom.$user[0]->nom."</a>";
+                        $rdv_passee['membres'] .= '@'.$user[0]->prenom.$user[0]->nom.";";
+                    }
                 }
-                echo"</td>";
-                echo "<td>".$value['Date']."</td>";
-                echo "<td>".$value['HeureDebut']."</td>";
-                echo "<td>".$value['HeureFin']."</td>";
-                echo "<td>";
+                $rdv_passee['date'] = $value['Date'];
+                $rdv_passee['HeureDebut'] = $value['HeureDebut'];
+                $rdv_passee['HeureFin'] = $value['HeureFin'];
+                array_push($all_rdv_passee, $rdv_passee);
+
+                $html .="</td>";
+                $html .= "<td>".$value['Date']."</td>";
+                $html .= "<td>".$value['HeureDebut']."</td>";
+                $html .= "<td>".$value['HeureFin']."</td>";
+                $html .= "<td>";
                 //echo "<button class='btn btn-danger'> <i class='fa fa-stop'></i> Annuler </button>";
 
-                echo "</td>";
-                echo "</tr>";
+                $html .= "</td>";
+                $html .= "</tr>";
             }
         }
-        echo '</tbody>';
-        echo'</table>';
-        echo '</div>';
-        echo '</div>';
+        $html .= '</tbody>';
+        $html .='</table>';
+        $html .= '</div>';
+        $html .= '</div>';
+
+        if(isset($_GET['API']) && $_GET['API']) {
+            $all_rdv = array();
+            $all_rdv['a_venir'] = $all_rdv_a_venir;
+            $all_rdv['passee'] = $all_rdv_passee;
+            echo json_encode($all_rdv);
+        } else {
+            echo $html;
+        }
+
     }
 
     public function reload_count_notif()
