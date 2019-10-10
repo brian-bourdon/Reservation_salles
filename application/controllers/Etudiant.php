@@ -138,7 +138,8 @@ class Etudiant extends CI_Controller {
 
 			$info = array();
 			$info['statut'] = true;
-			if(count($tab_verif_mail) <= $places_restantes_salle)
+			$verif_dispo = $this->_isAvailable($num_salle, $date->format('Y-m-d'), $heure_debut);
+			if($verif_dispo['statut'] && count($tab_verif_mail) <= $places_restantes_salle)
 			{
 				if($this->Rendez_vous_model->insert_rdv($data)) 
 				{
@@ -237,10 +238,23 @@ class Etudiant extends CI_Controller {
 		if(isset($_GET['idSalle'])) $idSalle = $_GET['idSalle'];
 		if(isset($_GET['idInterlocuteur'])) $idInterlocuteur = $_GET['idInterlocuteur'];
 
-		$res = $this->Rendez_vous_model->annuler_rdv($date, $heure_debut, $idSalle, $idInterlocuteur);
-		$this->session->set_flashdata('annuler_rdv', $res);
-
-		redirect('Site/accueil');
+		$heure_fin = new DateTime($heure_debut);
+		$heure_fin->modify('+ 1 hour');
+		if($heure_fin->format('H:00') == "00:00") $heure_fin->modify('- 1 minutes');
+		$rdv = $this->Rendez_vous_model->get_all_interlocuteur_rdv($date, $heure_debut, $idSalle, $heure_fin->format('H:i'))->result_array();
+		$verif_user = false;
+		foreach ($rdv as $key => $value) { // verif que le demandeur est bien dans le rdv
+			if($value['idDemandeur'] == $idInterlocuteur || $value['idInterlocuteur'] == $idInterlocuteur) $verif_user |= true;
+		}
+		if($verif_user) $res = $this->Rendez_vous_model->annuler_rdv($date, $heure_debut, $idSalle, $idInterlocuteur);
+		else $res = 0;
+		if(isset($_GET['API']) && $_GET['API']) {
+			echo $res;
+		}
+		else {
+			$this->session->set_flashdata('annuler_rdv', $res);
+			redirect('Site/accueil');
+		}
 	}
 	// Inscription etudiant pour l'appli android
 	public function ApiInscriptionEtudiant()
@@ -267,4 +281,20 @@ class Etudiant extends CI_Controller {
 			else echo 0;
 		}
 	}
+
+	private function _isAvailable($num_salles, $date, $heure_debut)
+    {
+        $query = $this->Rendez_vous_model->isSalleAvailable($num_salles, $date, $heure_debut);
+        $data = array();
+        if($query->num_rows() == 0)
+        {
+            $data['statut'] = true;
+        }
+        else
+        {
+            $data['statut'] = false;
+            $data['data'] = $query->result_array();
+        }
+        return $data;
+    }
 }

@@ -10,6 +10,7 @@ class Rendez_vous_model extends CI_Model
                         ->where('idSalle', $num_salle)
                         ->where('Date', $date)
                         ->where('HeureDebut', $heure_debut)
+                        ->order_by("idRdv", "asc")
                         ->get();
     }
 
@@ -94,6 +95,7 @@ class Rendez_vous_model extends CI_Model
                         ->where('Date', $Date)
                         ->where('HeureDebut', $HeureDebut)
                         ->where('idSalle', $idSalle)
+                        ->where('statut', 'accepted') // verifier que ne pose pas de problèmes 10/10/2019
                         ->get();
     }
     public function get_all_interlocuteur_rdv($Date, $HeureDemandee, $idSalle, $HeureFin)

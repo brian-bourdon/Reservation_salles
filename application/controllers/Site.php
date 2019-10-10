@@ -66,9 +66,19 @@ class Site extends CI_Controller {
                     echo "<tr class='notifs'>";
                     echo "<th scope='row'>".$rdv['titre']."</th>";
                     echo "<td>";
+                    $user = $this->User_model->get_user_by_id($rdv['idDemandeur'])->result_array();
+                    echo '<a href="#">@'.$user[0]['prenom'].$user[0]['nom'].'</a>';
+                    echo "</td>";
+                    echo "<td>";
+                    $tab_verif = array();
                     foreach($interlocuteurs->result_array() as $key2 => $value2)
                     {
-                        $user = $this->User_model->get_user_by_id($value2['idInterlocuteur'])->result();
+                        if(!in_array($value2['idInterlocuteur'], $tab_verif)) {
+                            array_push($tab_verif, $value2['idInterlocuteur']);
+                        }
+                    }
+                    foreach ($tab_verif as $key_real => $value_real) {
+                        $user = $this->User_model->get_user_by_id($value_real)->result();
                         echo '<a href="#">@'.$user[0]->prenom.$user[0]->nom."</a>";
                     }
                     echo "</td>";
@@ -110,21 +120,24 @@ class Site extends CI_Controller {
         echo '<tbody>';
         foreach($mes_rdv as $key => $value)
         {
+            $mes_rdv_real = $this->Rendez_vous_model->get_rdv($value['idSalle'], $value['Date'], $value['HeureDebut'])->row();
+            if(isset($mes_rdv_real)) $demandeur = $this->User_model->get_user_by_id($mes_rdv_real->idDemandeur)->result_array()[0];
+
             $titre_salle = $this->Salle_model->getSalleByIdSalles($value['idSalle'])->result()[0];
-            $demandeur = $this->User_model->get_user_by_id($value['idDemandeur'])->result_array()[0];
             $datetime = new DateTime($value['Date']." ".$value['HeureDebut']);
+
             if($datetime->format('Y-m-d H:i:s') >= date('Y-m-d H:i:s'))
             {
                 echo "<tr class='rdv_value'>";
                 echo "<th scope='row'>".$titre_salle->titre."</th>";
-                echo "<td><a href='#'>@".$demandeur['nom'].$demandeur['prenom']."</a></td>";
+                echo "<td><a href='#'>@".$demandeur['prenom'].$demandeur['nom']."</a></td>";
                 echo "<td>";
                 $interlocuteurs = $this->Rendez_vous_model->get_interlocuteur_rdv($value['Date'], $value['HeureDebut'], $value['idSalle']);
                 //var_dump($interlocuteurs->result_array());
                 foreach($interlocuteurs->result_array() as $key2 => $value2)
                 {
-                    $user = $this->User_model->get_user_by_id($value2['idInterlocuteur'])->result();
-                    if(!empty($user)) echo '<a href="#"">@'.$user[0]->prenom.$user[0]->nom."</a>";
+                    if($value2['idInterlocuteur'] != $mes_rdv_real->idDemandeur) $user = $this->User_model->get_user_by_id($value2['idInterlocuteur'])->result();
+                    if(isset($user) && !empty($user)) echo '<a href="#"">@'.$user[0]->prenom.$user[0]->nom."</a>";
                 }
                 echo"</td>";
                 echo "<td>".$value['Date']."</td>";
@@ -156,22 +169,24 @@ class Site extends CI_Controller {
         echo '<tbody>';
         foreach($mes_rdv as $key => $value)
         {
+            $mes_rdv_real = $this->Rendez_vous_model->get_rdv($value['idSalle'], $value['Date'], $value['HeureDebut'])->row();
+            if(isset($mes_rdv_real)) $demandeur = $this->User_model->get_user_by_id($mes_rdv_real->idDemandeur)->result_array()[0];
+
             $titre_salle = $this->Salle_model->getSalleByIdSalles($value['idSalle'])->result()[0];
-            $demandeur = $this->User_model->get_user_by_id($value['idDemandeur'])->result_array()[0];
             $datetime = new DateTime($value['Date']." ".$value['HeureDebut']);
 
             if($datetime->format('Y-m-d H:i:s') < date('Y-m-d H:i:s') /*|| ($value['Date'] == date('Y-m-d') && date('H:i:s') > $value['HeureDebut'])*/)
             {
                 echo "<tr class='rdv_value'>";
                 echo "<th scope='row'>".$titre_salle->titre."</th>";
-                echo "<td><a href='#'>@".$demandeur['nom'].$demandeur['prenom']."</a></td>";
+                echo "<td><a href='#'>@".$demandeur['prenom'].$demandeur['nom']."</a></td>";
                 echo "<td>";
                 $interlocuteurs = $this->Rendez_vous_model->get_interlocuteur_rdv($value['Date'], $value['HeureDebut'], $value['idSalle']);
 
                 foreach($interlocuteurs->result_array() as $key2 => $value2)
                 {
-                    $user = $this->User_model->get_user_by_id($value2['idInterlocuteur'])->result();
-                    if(!empty($user)) echo '<a href="#"">@'.$user[0]->prenom.$user[0]->nom."</a>";
+                    if($value2['idInterlocuteur'] != $mes_rdv_real->idDemandeur) $user = $this->User_model->get_user_by_id($value2['idInterlocuteur'])->result();
+                    if(isset($user) && !empty($user)) echo '<a href="#"">@'.$user[0]->prenom.$user[0]->nom."</a>";
                 }
                 echo"</td>";
                 echo "<td>".$value['Date']."</td>";

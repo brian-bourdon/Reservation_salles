@@ -108,6 +108,7 @@
                             <thead>
                                 <tr>
                                     <th scope="col">Numéro de salle</th>
+                                    <th scope="col">Créateur du groupe</th>
                                     <th scope="col">Membres du groupe</th>
                                     <th scope="col">Date</th>
                                     <th scope="col">Heure de début</th>
