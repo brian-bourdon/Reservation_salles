@@ -202,16 +202,18 @@ class Etudiant extends CI_Controller {
 		$res = true;
 		if(isset($_GET['id']) && !empty($_GET['id'])) $res &= $this->Notification_model->delete_by_id($_GET['id']); // Supprime notif
 		if(isset($_GET['idRdv']) && !empty($_GET['idRdv'])) $res &= $this->Notification_model->update_rdv_after_notif($_GET['idRdv'], "accepted"); // Maj rdv
-		if($res)
-		{
-			echo '<div class="alert alert-success alert-dismissible fade show" role="alert">
-			  Vous avez bien rejoins le groupe
-			  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-			    <span aria-hidden="true">&times;</span>
-			  </button>
-			</div>';
+		if(isset($_GET['API']) && $_GET['API']) echo $res;
+		else {
+			if($res)
+			{
+				echo '<div class="alert alert-success alert-dismissible fade show" role="alert">
+				  Vous avez bien rejoins le groupe
+				  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+				    <span aria-hidden="true">&times;</span>
+				  </button>
+				</div>';
+			}
 		}
-		//redirect(base_url('Site/accueil'));
 	}
 
 	public function notif_refused()
@@ -219,16 +221,19 @@ class Etudiant extends CI_Controller {
 		$res = true;
 		if(isset($_GET['id']) && !empty($_GET['id'])) $res &= $this->Notification_model->delete_by_id($_GET['id']); // Supprime notif
 		if(isset($_GET['idRdv']) && !empty($_GET['idRdv'])) $res &= $this->Notification_model->update_rdv_after_notif($_GET['idRdv'], "refused"); // Maj rdv
-		if($res)
+		if(isset($_GET['API']) && $_GET['API']) echo $res;
+		else
 		{
-			echo '<div class="alert alert-warning alert-dismissible fade show" role="alert">
-			  Vous avez bien quitté le groupe
-			  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-			    <span aria-hidden="true">&times;</span>
-			  </button>
-			</div>';
+			if($res)
+			{
+				echo '<div class="alert alert-warning alert-dismissible fade show" role="alert">
+				  Vous avez bien quitté le groupe
+				  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+				    <span aria-hidden="true">&times;</span>
+				  </button>
+				</div>';
+			}
 		}
-		//redirect(base_url('Site/accueil'));
 	}
 
 	public function annuler_rdv()
